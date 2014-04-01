@@ -1,7 +1,7 @@
-# Prakikum 1
+# Praktikum 1
 ## Aufgabe 1
 1. Der Text wurde mithilfe des Caesar Cipher verschlüsselt
-2. Der Schlüssel lautet 7
+2. Der Schlüssel lautet 19
 3. `FUER AUFGABE ZWEI KANN DIE HAEUFIGKEITS-ANALYSE IN JCRYPTOOL HILF-REICH SEIN.`
 
 ## Aufgabe 2
