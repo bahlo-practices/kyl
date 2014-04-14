@@ -36,7 +36,7 @@ void permutation() {
       pi[i] = tmp;
     }
 
-    // Populate y, the result with the values in x at pi[i]
+    // Populate y, the result, with the values in x at pi[i]
     for (int i = 0; i < 128; ++i) {
         y[i] = x[pi[i]];
     }
@@ -45,47 +45,38 @@ void permutation() {
     for (int i = 0; i < 128; i++) {
         cout << "x = " << x[i] << "\t\tpi = " << pi[i] << "\t\ty = " << y[i] << endl;
     }
+
+    return;
 }
 
-void substitution() {
-    int x1 = 1234;
-    int x2 = 5678;
-    int x3 = 6666;
-    int y1 = 0;
-    int y2 = 0;
-    int y3 = 0;
-    int s_Box[8192];
+int substitution(int value) {
+    int sBox[8192];
 
-    bool exists = false;
-    int counter = 0;
-    int tmp = 0;
-    while (counter < 8191) {
-        tmp = (int) rand() % 8192;
-        exists = false;
-        for (int i = 0; i < 8192; i++) {
-            if (s_Box[i] == tmp) {
-                exists = true;
-                break;
-            }
+    for (int i = 0;i < 8192;++i) {
+      int tmp = (int) rand() % 8192;
+
+      // Check if tmp is existant in sBox[i]
+      for (int j = 0; j < 8192; ++j) {
+        if (sBox[i] == tmp) {
+          break;
         }
-        if (!exists) {
-            s_Box[counter] = tmp;
-            counter++;
-        }
+      }
+
+      // tmp not found, set it at sBox[i]
+      sBox[i] = tmp;
     }
 
-    y1 = s_Box[x1];
-    y2 = s_Box[x2];
-    y3 = s_Box[x3];
+    int result = sBox[value];
 
-    cout << "Klartext 1: "<< x1 << "\tSubstitution: " << y1 << endl;
-    cout << "Klartext 2: "<< x2 << "\tSubstitution: " << y2 << endl;
-    cout << "Klartext 3: "<< x3 << "\tSubstitution: " << y3 << endl;
+    cout << "Klartext: "<< value << "\tSubstitution: " << result << endl;
+    return result;
 }
 
 int main() {
     srand(time(NULL));
-    permutation();
-    //substitution();
+    //permutation();
+    substitution(1234);
+    substitution(5678);
+    substitution(6666);
     return 0;
 }
