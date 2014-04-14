@@ -12,32 +12,36 @@
 using namespace std;
 
 void permutation() {
-    int x[128];
-    int y[128];
-    int pi[128];
-    for (int i = 0; i < 128; i++) {
+    int x[128];  // Clear text
+    int y[128];  // Result
+    int pi[128]; // Result of bijection
+
+    // Populate x
+    for (int i = 0; i < 128; ++i) {
         x[i] = i + 1;
     }
-    bool exists = false;
-    int counter = 0;
-    int tmp = 0;
-    while (counter < 127) {
-        tmp = (int) rand() % 128;
-        exists = false;
-        for (int i = 0; i < 128; i++) {
-            if (pi[i] == tmp) {
-                exists = true;
-                break;
-            }
+
+    // Populate pi with distinct values
+    for (int i = 0;i < 127;++i) {
+      int tmp = (int) rand() % 128;
+
+      // Find tmp in pi[] and break if it's in it
+      for (int j = 0; j < 128; ++j) {
+        if (pi[i] == tmp) {
+          break;
         }
-        if (!exists) {
-            pi[counter] = tmp;
-            counter++;
-        }
+      }
+
+      // Value not found, set a new one
+      pi[i] = tmp;
     }
-    for (int i = 0; i < 128; i++) {
+
+    // Populate y, the result with the values in x at pi[i]
+    for (int i = 0; i < 128; ++i) {
         y[i] = x[pi[i]];
     }
+
+    // Print
     for (int i = 0; i < 128; i++) {
         cout << "x = " << x[i] << "\t\tpi = " << pi[i] << "\t\ty = " << y[i] << endl;
     }
@@ -81,7 +85,7 @@ void substitution() {
 
 int main() {
     srand(time(NULL));
-//    permutation();
-    substitution();
+    permutation();
+    //substitution();
     return 0;
 }
