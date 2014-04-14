@@ -11,7 +11,7 @@
 
 ## Aufgabe 3
 2. Substitutionen sind nichtlineare Abbildungen, die Zeichen komplett ersetzen. Sie wird ebenfalls für die Berechnung des Rundenschlüssels benötigt, ist dabei vor allem für den Teil der Konfusion verantwortlich
-3.
+3. Die Substitution ist nicht ausreichend, da durch eine Häufigkeitsanalyse nach und nach der Text entschlüsselt werden kann.
 
 ## Aufgabe 4
 Weil XOR in beide Richtungen funktioniert, im Gegensatz zu AND oder OR.
