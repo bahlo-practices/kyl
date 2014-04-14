@@ -52,6 +52,7 @@ void permutation() {
 int substitution(int value) {
     int sBox[8192];
 
+    // Populate sBox with distinct values
     for (int i = 0;i < 8192;++i) {
       int tmp = (int) rand() % 8192;
 
