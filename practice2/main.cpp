@@ -1,6 +1,6 @@
 /*
  * File:   main.cpp
- * Author: Yvonne & Frederik
+ * Author: Yvonne, Frederik & Arne
  *
  * Created on 8. April 2014, 17:52
  */
