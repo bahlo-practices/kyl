@@ -66,10 +66,10 @@ void substitution() {
     bool exists = false;
     int counter = 0;
     int tmp = 0;
-    while (counter < 8191) {
+    while (counter < 8192) {
         tmp = (int) rand() % 8192;
         exists = false;
-        for (int i = 0; i < 8192; i++) {
+        for (int i = 0; i < 8191; i++) {
             if (s_Box[i] == tmp) {
                 exists = true;
                 break;
@@ -93,7 +93,7 @@ void substitution() {
 
 int main() {
     srand(time(NULL));
-    permutation();
-    //substitution();
+    //permutation();
+    substitution();
     return 0;
 }

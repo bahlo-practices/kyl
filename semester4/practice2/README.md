@@ -1,8 +1,7 @@
 # Praktikum 2
 
 ## Aufgabe 1
-- Bis auf alle 4 Runden wird zusätzlich noch das Wort vor dem substitutionieren rotiert.
-- Alle 4 Runden wird die Substitution übersprungen und nur gexort.
+- Beim AES wird blockweise gearbeitet
 
 ## Aufgabe 2
 2. Eine Permutation ändert die Reihenfolge von Abbildungen (beispielsweise Zeichen). Sie wird zum Berechnen des Rundenschlüssels benötigt.
