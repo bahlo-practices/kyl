@@ -2,6 +2,7 @@
 
 ## Aufgabe 1
 - Beim AES wird blockweise gearbeitet
+- Der AES macht vor der Substitution noch ein `XOR` mit dem letzten Block.
 
 ## Aufgabe 2
 2. Eine Permutation ändert die Reihenfolge von Abbildungen (beispielsweise Zeichen). Sie wird zum Berechnen des Rundenschlüssels benötigt.
