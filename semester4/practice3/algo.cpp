@@ -1,42 +1,20 @@
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
-char substituteChar(char value) {
-  // The S-Box
-  size_t size = 128;
-  int sBox[size];
-
-  // Populate sBox with distinct values
-  bool exists = false;
-  int counter = 0;
-  int tmp = 0;
-  while (counter < size) {
-      tmp = (int) rand() % size;
-      exists = false;
-      for (int i = 0; i < size - 1; ++i) {
-          if (sBox[i] == tmp) {
-              exists = true;
-              break;
-          }
-      }
-      if (!exists) {
-          sBox[counter] = tmp;
-          counter++;
-      }
-  }
-
+char substituteChar(char value, string key) {
   // Get the substitution
-  return (char) sBox[(int) value];
+  return key[value];
 }
 
-string substituteString(string value) {
+string substituteString(string value, string key) {
   string result;
   char tmp;
 
   for (size_t i = 0; i < value.size(); ++i) {
-    tmp = substituteChar(value[i]);
+    tmp = substituteChar(value[i], key);
     result.append(&tmp);
   }
 
@@ -44,6 +22,23 @@ string substituteString(string value) {
 }
 
 int main() {
-  std::cout << substituteChar('b') << std::endl;
-  std::cout << substituteString("Test") << std::endl;
+  srand(time(NULL));
+
+  // Generate key
+  int i = 0;
+  int tmp = 0;
+  size_t size = 128;
+  string key;
+  while (i < size) {
+      tmp = (int) rand() % size;
+      char c = (char) tmp;
+      key.append(&c);
+      i++;
+  }
+
+  cout << "'" << substituteChar('b', key) << "'" << endl;
+  cout << "'" << substituteString("Hier los", key) << "'"  << endl;
+
+  // Create block
+  vector<vector<string> > block;
 }
