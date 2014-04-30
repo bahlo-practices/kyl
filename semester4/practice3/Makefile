@@ -3,8 +3,8 @@ CC=g++
 CFLAGS=-Wall
 LDFLAGS=
 SOURCES=
-MAIN=algo.cpp
-EXECUTABLE=algo.o
+MAIN=main.cpp
+EXECUTABLE=main.o
 
 # Tasks
 all:
