@@ -80,10 +80,10 @@ void fillBlock(block &b) {
 }
 
 void printBlocks(const vector<block> blocks) {
-  for (size_t i = 0; i < blocks.size(); i++) { //Bloecke
+  for (size_t i = 0; i < blocks.size(); i++) { // Blocks
     cout << endl << "---------------" << endl << endl;
-    for (size_t j = 0; j < blocks.at(i).size(); j++) { //Block
-      for (size_t k = 0; k < blocks.at(i).at(j).size(); k++) { //Zeile
+    for (size_t j = 0; j < blocks.at(i).size(); j++) { // Block
+      for (size_t k = 0; k < blocks.at(i).at(j).size(); k++) { // Row
         cout << setw(4) << left << hex << blocks.at(i).at(j).at(k);
       }
       cout << endl;
@@ -133,11 +133,10 @@ vector<block> getBlocks(string message) {
 }
 
 int main() {
-
   string message = "";
 
   cout << "Nachricht: ";
-  cin >> message;
+  getline(cin, message);
 
   vector<block> blocks = getBlocks(message);
   printBlocks(blocks);
