@@ -85,7 +85,7 @@ void printBlocks(const vector<block> blocks) {
     cout << endl << "---------------" << endl << endl;
     for (unsigned int j = 0; j < blocks.at(i).size(); j++) { //Block
       for (unsigned int k = 0; k < blocks.at(i).at(j).size(); k++) { //Zeile
-        cout << setw(4) << left << blocks.at(i).at(j).at(k);
+        cout << setw(4) << left << hex << blocks.at(i).at(j).at(k);
       }
       cout << endl;
     }
@@ -143,11 +143,13 @@ int main() {
   vector<block> blocks = getBlocks(message);
   printBlocks(blocks);
 
+  cout << "subBytes.." << endl;
   for (unsigned int i = 0; i < blocks.size(); ++i) {
     aes::subBytes(blocks.at(i));
   }
   printBlocks(blocks);
 
+  cout << "shiftRows.." << endl;
   for (unsigned int i = 0; i < blocks.size(); ++i) {
     aes::shiftRows(blocks.at(i));
   }
