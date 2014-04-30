@@ -2,7 +2,7 @@
 CC=g++
 CFLAGS=-Wall
 LDFLAGS=
-SOURCES=
+SOURCES=aes.cpp
 MAIN=main.cpp
 EXECUTABLE=main.o
 
