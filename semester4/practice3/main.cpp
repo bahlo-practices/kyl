@@ -8,8 +8,8 @@
 using namespace std;
 
 // Typedef
-typedef unsigned char row[4];
-typedef row block[4];
+typedef vector<int> row;
+typedef vector<row> block;
 
 const string key = "12345789";
 
@@ -33,27 +33,27 @@ namespace aes {
     0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
   };
 
-  void subBytes(vector<vector<int> > &block) {
-    for (unsigned int i = 0; i < block.size(); ++i) {
-      for (unsigned int j = 0; j < block.at(i).size(); ++j) {
-        block.at(i).at(j) = sbox[block.at(i).at(j)];
+  void subBytes(block &b) {
+    for (unsigned int i = 0; i < b.size(); ++i) {
+      for (unsigned int j = 0; j < b.at(i).size(); ++j) {
+        b.at(i).at(j) = sbox[b.at(i).at(j)];
       }
     }
   }
 
-  void shiftRows(vector<vector<int> > &block) {
-    for (unsigned int i = 0; i < block.size(); ++i) {
+  void shiftRows(block &b) {
+    for (unsigned int i = 0; i < b.size(); ++i) {
       switch (i) {
         case 0:
           break;
         case 1:
-          rotate(block.at(i).begin(), block.at(i).begin() + 1, block.at(i).end());
+          rotate(b.at(i).begin(), b.at(i).begin() + 1, b.at(i).end());
           break;
         case 2:
-          rotate(block.at(i).begin(), block.at(i).begin() + 2, block.at(i).end());
+          rotate(b.at(i).begin(), b.at(i).begin() + 2, b.at(i).end());
           break;
         case 3:
-          rotate(block.at(i).begin(), block.at(i).begin() + 3, block.at(i).end());
+          rotate(b.at(i).begin(), b.at(i).begin() + 3, b.at(i).end());
           break;
         default:
           break;
@@ -61,26 +61,26 @@ namespace aes {
     }
   }
 
-  void mixColumns(vector<vector<int> > &block) {
+  void mixColumns(block &b) {
 
   }
 }
 
-void fillRow(vector<int> &row) {
-  for (unsigned int i = row.size(); i < 4; ++i) {
-    row.push_back(0);
+void fillRow(row &r) {
+  for (unsigned int i = r.size(); i < 4; ++i) {
+    r.push_back(0);
   }
 }
 
-void fillBlock(vector<vector<int > > &block) {
-  for (unsigned int i = block.size(); i < 4; i++) {
-    vector<int> row;
-    fillRow(row);
-    block.push_back(row);
+void fillBlock(block &b) {
+  for (unsigned int i = b.size(); i < 4; i++) {
+    row r;
+    fillRow(r);
+    b.push_back(r);
   }
 }
 
-void printBlocks(const vector<vector<vector<int> > > blocks) {
+void printBlocks(const vector<block> blocks) {
   for (unsigned int i = 0; i < blocks.size(); i++) { //Bloecke
     cout << endl << "---------------" << endl << endl;
     for (unsigned int j = 0; j < blocks.at(i).size(); j++) { //Block
@@ -93,41 +93,41 @@ void printBlocks(const vector<vector<vector<int> > > blocks) {
   if (blocks.size() > 0) cout << endl << "---------------" << endl << endl;
 }
 
-vector<vector<vector<int> > > getBlocks(string message) {
-  vector<vector<vector<int> > > blocks;
+vector<block> getBlocks(string message) {
+  vector<block> blocks;
   const char *cmsg = message.c_str();
 
-  vector<vector<int> > block;
-  vector<int> row;
+  block b;
+  row r;
   for (unsigned int i = 0; i < message.size(); ++i) {
     int charCode = (int) cmsg[i];
 
-    row.push_back(charCode);
+    r.push_back(charCode);
     if ((i + 1) % 4 == 0) {
-      block.push_back(row);
+      b.push_back(r);
 
       vector<int> tmp;
-      row = tmp;
+      r = tmp;
     }
     if ((i + 1) % 16 == 0) {
-      // Create new block
-      blocks.push_back(block);
+      // Create new b
+      blocks.push_back(b);
 
       vector<vector<int> > tmp;
-      block = tmp;
+      b = tmp;
     }
 
   }
 
   // Fill with zeros
-  if (row.size() > 0) { //Reihe auffuellen
-    fillRow(row);
-    block.push_back(row);
+  if (r.size() > 0) { //Reihe auffuellen
+    fillRow(r);
+    b.push_back(r);
   }
 
-  if (block.size() > 0) {
-    fillBlock(block);
-    blocks.push_back(block);
+  if (b.size() > 0) {
+    fillBlock(b);
+    blocks.push_back(b);
   }
 
   return blocks;
@@ -140,7 +140,7 @@ int main() {
   cout << "Nachricht: ";
   cin >> message;
 
-  vector<vector<vector<int> > > blocks = getBlocks(message);
+  vector<block> blocks = getBlocks(message);
   printBlocks(blocks);
 
   for (unsigned int i = 0; i < blocks.size(); ++i) {
