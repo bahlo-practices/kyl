@@ -34,15 +34,15 @@ namespace aes {
   };
 
   void subBytes(block &b) {
-    for (unsigned int i = 0; i < b.size(); ++i) {
-      for (unsigned int j = 0; j < b.at(i).size(); ++j) {
+    for (size_t i = 0; i < b.size(); ++i) {
+      for (size_t j = 0; j < b.at(i).size(); ++j) {
         b.at(i).at(j) = sbox[b.at(i).at(j)];
       }
     }
   }
 
   void shiftRows(block &b) {
-    for (unsigned int i = 0; i < b.size(); ++i) {
+    for (size_t i = 0; i < b.size(); ++i) {
       switch (i) {
         case 0:
           break;
@@ -62,18 +62,17 @@ namespace aes {
   }
 
   void mixColumns(block &b) {
-
   }
 }
 
 void fillRow(row &r) {
-  for (unsigned int i = r.size(); i < 4; ++i) {
+  for (size_t i = r.size(); i < 4; ++i) {
     r.push_back(0);
   }
 }
 
 void fillBlock(block &b) {
-  for (unsigned int i = b.size(); i < 4; i++) {
+  for (size_t i = b.size(); i < 4; i++) {
     row r;
     fillRow(r);
     b.push_back(r);
@@ -81,10 +80,10 @@ void fillBlock(block &b) {
 }
 
 void printBlocks(const vector<block> blocks) {
-  for (unsigned int i = 0; i < blocks.size(); i++) { //Bloecke
+  for (size_t i = 0; i < blocks.size(); i++) { //Bloecke
     cout << endl << "---------------" << endl << endl;
-    for (unsigned int j = 0; j < blocks.at(i).size(); j++) { //Block
-      for (unsigned int k = 0; k < blocks.at(i).at(j).size(); k++) { //Zeile
+    for (size_t j = 0; j < blocks.at(i).size(); j++) { //Block
+      for (size_t k = 0; k < blocks.at(i).at(j).size(); k++) { //Zeile
         cout << setw(4) << left << hex << blocks.at(i).at(j).at(k);
       }
       cout << endl;
@@ -99,7 +98,7 @@ vector<block> getBlocks(string message) {
 
   block b;
   row r;
-  for (unsigned int i = 0; i < message.size(); ++i) {
+  for (size_t i = 0; i < message.size(); ++i) {
     int charCode = (int) cmsg[i];
 
     r.push_back(charCode);
@@ -144,13 +143,13 @@ int main() {
   printBlocks(blocks);
 
   cout << "subBytes.." << endl;
-  for (unsigned int i = 0; i < blocks.size(); ++i) {
+  for (size_t i = 0; i < blocks.size(); ++i) {
     aes::subBytes(blocks.at(i));
   }
   printBlocks(blocks);
 
   cout << "shiftRows.." << endl;
-  for (unsigned int i = 0; i < blocks.size(); ++i) {
+  for (size_t i = 0; i < blocks.size(); ++i) {
     aes::shiftRows(blocks.at(i));
   }
   printBlocks(blocks);
