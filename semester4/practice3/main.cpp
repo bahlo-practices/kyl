@@ -81,15 +81,13 @@ void fillBlock(block &b) {
 
 void printBlocks(const vector<block> blocks) {
   for (size_t i = 0; i < blocks.size(); i++) { // Blocks
-    cout << endl << "---------------" << endl << endl;
     for (size_t j = 0; j < blocks.at(i).size(); j++) { // Block
       for (size_t k = 0; k < blocks.at(i).at(j).size(); k++) { // Row
-        cout << setw(4) << left << hex << blocks.at(i).at(j).at(k);
+        cout << setw(3) << left << hex << blocks.at(i).at(j).at(k);
       }
       cout << endl;
     }
   }
-  if (blocks.size() > 0) cout << endl << "---------------" << endl << endl;
 }
 
 vector<block> getBlocks(string message) {
@@ -138,16 +136,17 @@ int main() {
   cout << "Nachricht: ";
   getline(cin, message);
 
+  cout << endl << "getBlocks.." << endl << endl;
   vector<block> blocks = getBlocks(message);
   printBlocks(blocks);
 
-  cout << "subBytes.." << endl;
+  cout << endl << "subBytes.." << endl << endl;
   for (size_t i = 0; i < blocks.size(); ++i) {
     aes::subBytes(blocks.at(i));
   }
   printBlocks(blocks);
 
-  cout << "shiftRows.." << endl;
+  cout << endl << "shiftRows.." << endl << endl;
   for (size_t i = 0; i < blocks.size(); ++i) {
     aes::shiftRows(blocks.at(i));
   }
