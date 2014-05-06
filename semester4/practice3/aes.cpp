@@ -78,16 +78,28 @@ namespace aes {
     return transformated;
   }
 
+  // http://en.wikipedia.org/wiki/Rijndael_mix_columns#Implementation_example
   void mixColumns(block &b) {
     block columns = transformate(b);
 
-    for (int i = 0; i < columns.size(); ++i) { // For each column
-      column c = columns.at(i);
+    column c;
+    column d;
+    unsigned char h;
 
-      columns.at(i).at(0) = (c.at(0) * 2) ^ (c.at(1) * 3) ^ (c.at(2) * 1) ^ (c.at(3) * 1);
-      columns.at(i).at(1) = (c.at(0) * 1) ^ (c.at(1) * 2) ^ (c.at(2) * 3) ^ (c.at(3) * 1);
-      columns.at(i).at(2) = (c.at(0) * 1) ^ (c.at(1) * 1) ^ (c.at(2) * 2) ^ (c.at(3) * 3);
-      columns.at(i).at(3) = (c.at(0) * 3) ^ (c.at(1) * 1) ^ (c.at(2) * 1) ^ (c.at(3) * 2);
+    for (int i = 0; i < columns.size(); ++i) { // For each column
+      c = columns.at(i);
+      d = columns.at(i);
+
+      for (int j = 0; j < 4; ++j) {
+        h = (unsigned char)((signed char) c.at(j) >> 7);
+        d.at(j) = c.at(j) << 1;
+        d.at(j) ^= 0x1B & h;
+      }
+
+      columns.at(i).at(0) = d.at(0) ^ c.at(3) ^ c.at(2) ^ d.at(1) ^ c.at(1);
+      columns.at(i).at(1) = d.at(1) ^ c.at(0) ^ c.at(3) ^ d.at(2) ^ c.at(2);
+      columns.at(i).at(2) = d.at(2) ^ c.at(1) ^ c.at(0) ^ d.at(3) ^ c.at(3);
+      columns.at(i).at(3) = d.at(3) ^ c.at(2) ^ c.at(1) ^ d.at(0) ^ c.at(0);
     }
 
     b = transformate(columns);
@@ -98,6 +110,7 @@ namespace aes {
 
     for (int i = 0; i < columns.size(); ++i) { // Each row
       for (int j = 0; j < columns.at(i).size(); ++j) { // Each item
+        // TODO: What if key is not as long as block? Repeat it?
         columns.at(i).at(j) = columns.at(i).at(j) ^ k.at(j);
       }
     }
