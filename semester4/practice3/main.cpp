@@ -114,5 +114,11 @@ int main() {
   }
   printBlocks(rowed);
 
+  cout << endl << "mixColumns.." << endl << endl;
+  for (size_t i = 0; i < blocks.size(); ++i) {
+    aes::mixColumns(blocks.at(i));
+  }
+  printBlocks(blocks);
+
   return 0;
 }

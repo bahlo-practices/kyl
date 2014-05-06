@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 #include "aes.h"
 
@@ -81,9 +82,14 @@ namespace aes {
     block columns = transformate(b);
 
     for (int i = 0; i < columns.size(); ++i) { // For each column
-//      columns.at(i)
+      column c = columns.at(i);
+
+      columns.at(i).at(0) = (c.at(0) * 2) ^ (c.at(1) * 3) ^ (c.at(2) * 1) ^ (c.at(3) * 1);
+      columns.at(i).at(1) = (c.at(0) * 1) ^ (c.at(1) * 2) ^ (c.at(2) * 3) ^ (c.at(3) * 1);
+      columns.at(i).at(2) = (c.at(0) * 1) ^ (c.at(1) * 1) ^ (c.at(2) * 2) ^ (c.at(3) * 3);
+      columns.at(i).at(3) = (c.at(0) * 3) ^ (c.at(1) * 1) ^ (c.at(2) * 1) ^ (c.at(3) * 2);
     }
 
-    b = columns;
+    b = transformate(columns);
   }
 }
