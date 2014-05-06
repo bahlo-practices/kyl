@@ -78,6 +78,7 @@ namespace aes {
     return transformated;
   }
 
+  // FIXME: H should be 0x19 after mixColumns, it isn't
   // http://en.wikipedia.org/wiki/Rijndael_mix_columns#Implementation_example
   void mixColumns(block &b) {
     block columns = transformate(b);
@@ -105,6 +106,7 @@ namespace aes {
     b = transformate(columns);
   }
 
+  // FIXME: Please re-check this
   void addRoundKey(block &b, const key k) {
     block columns = transformate(b);
 
