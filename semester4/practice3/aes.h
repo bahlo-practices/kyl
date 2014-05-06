@@ -9,6 +9,6 @@ namespace aes {
 
   void subBytes(block &b);
   void shiftRows(block &b);
-  vector<column> getColumns(const block b);
+  block transformate(const block b);
   void mixColumns(block &b);
 }

@@ -55,28 +55,35 @@ namespace aes {
     }
   }
 
-  vector<column> getColumns(const block b) {
-    vector<column> columns;
+  block transformate(const block b) {
+    block transformated;
 
     for (int i = 0; i < b.size(); ++i) { // Each row
       for (int j = 0; j < b.at(i).size(); ++j) { // Each item
-        if (columns.size() <= j) {
-          // We need more columns, create one
-          column c;
+        if (transformated.size() <= j) {
+          // We need more columns/rows, create one
+          vector<int> c;
           // Push back value
           c.push_back(b.at(i).at(j));
           // Push back column
-          columns.push_back(c);
+          transformated.push_back(c);
         } else {
           // Column exists, push back value
-          columns.at(j).push_back(b.at(i).at(j));
+          transformated.at(j).push_back(b.at(i).at(j));
         }
       }
     }
 
-    return columns;
+    return transformated;
   }
 
   void mixColumns(block &b) {
+    block columns = transformate(b);
+
+    for (int i = 0; i < columns.size(); ++i) { // For each column
+//      columns.at(i)
+    }
+
+    b = columns;
   }
 }

@@ -100,12 +100,19 @@ int main() {
   }
   printBlocks(blocks);
 
-  cout << endl << "getColumns.." << endl << endl;
+  cout << endl << "transformate.." << endl << endl;
   vector<aes::block> columned;
   for (size_t i = 0; i < blocks.size(); ++i) {
-    columned.push_back(aes::getColumns(blocks.at(i)));
+    columned.push_back(aes::transformate(blocks.at(i)));
   }
   printBlocks(columned);
+
+  cout << endl << "transformate#2.." << endl << endl;
+  vector<aes::block> rowed;
+  for (size_t i = 0; i < columned.size(); ++i) {
+    rowed.push_back(aes::transformate(columned.at(i)));
+  }
+  printBlocks(rowed);
 
   return 0;
 }
