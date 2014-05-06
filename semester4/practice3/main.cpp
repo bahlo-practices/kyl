@@ -29,7 +29,7 @@ void printBlocks(const vector<aes::block> blocks) {
   for (size_t i = 0; i < blocks.size(); i++) { // Blocks
     for (size_t j = 0; j < blocks.at(i).size(); j++) { // Block
       for (size_t k = 0; k < blocks.at(i).at(j).size(); k++) { // Row
-        cout << setw(3) << left << hex << blocks.at(i).at(j).at(k);
+        cout << setw(4) << left << hex << blocks.at(i).at(j).at(k);
       }
       cout << endl;
     }
@@ -50,14 +50,14 @@ vector<aes::block> getBlocks(string message) {
     if ((i + 1) % 4 == 0) {
       b.push_back(r);
 
-      vector<int> tmp;
+      aes::row tmp;
       r = tmp;
     }
     if ((i + 1) % 16 == 0) {
       // Create new b
       blocks.push_back(b);
 
-      vector<vector<int> > tmp;
+      aes::block tmp;
       b = tmp;
     }
 
@@ -97,6 +97,12 @@ int main() {
   cout << endl << "shiftRows.." << endl << endl;
   for (size_t i = 0; i < blocks.size(); ++i) {
     aes::shiftRows(blocks.at(i));
+  }
+  printBlocks(blocks);
+
+  cout << endl << "mixColumns.." << endl << endl;
+  for (size_t i = 0; i < blocks.size(); ++i) {
+    aes::mixColumns(blocks.at(i));
   }
   printBlocks(blocks);
 

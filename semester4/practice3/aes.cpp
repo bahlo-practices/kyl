@@ -49,5 +49,15 @@ namespace aes {
   }
 
   void mixColumns(block &b) {
+    int matrix[16] = {2, 3, 1, 1,
+                      1, 2, 3, 1,
+                      1, 1, 2, 3,
+                      3, 1, 1, 2};
+
+    for (int i = 0; i < b.size(); ++i) { // Each row
+      for (int j = 0; j < b.at(i).size(); ++j) { // Each item
+        b.at(i).at(j) *= matrix[i * 4 + j];
+      }
+    }
   }
 }
