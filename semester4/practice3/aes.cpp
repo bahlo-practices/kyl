@@ -27,7 +27,10 @@ namespace aes {
   void subBytes(block &b) {
     for (size_t i = 0; i < b.size(); ++i) {
       for (size_t j = 0; j < b.at(i).size(); ++j) {
-        b.at(i).at(j) = sbox[b.at(i).at(j)];
+        int v = b.at(i).at(j);
+        int r = v / 16;
+        int c = v % 16;
+        b.at(i).at(j) = sbox[r * 16 + c];
       }
     }
   }
