@@ -9,8 +9,6 @@
 
 using namespace std;
 
-const string key = "12345789";
-
 void fillRow(aes::row &r) {
   for (size_t i = r.size(); i < 4; ++i) {
     r.push_back(0);
@@ -29,7 +27,7 @@ void printBlocks(const vector<aes::block> blocks) {
   for (size_t i = 0; i < blocks.size(); i++) { // Blocks
     for (size_t j = 0; j < blocks.at(i).size(); j++) { // Block
       for (size_t k = 0; k < blocks.at(i).at(j).size(); k++) { // Row
-        cout << setw(4) << left << hex << blocks.at(i).at(j).at(k);
+        cout << setw(4) << left << hex << blocks.at(i).at(j).at(k) << dec;
       }
       cout << endl;
     }
@@ -78,11 +76,38 @@ vector<aes::block> getBlocks(string message) {
   return blocks;
 }
 
+aes::key getKey(const string sk) {
+  aes::key k;
+
+  for (int i = 0; i < sk.size(); ++i) {
+    k.push_back((int) sk[i]);
+  }
+
+  return k;
+}
+
+void printKey(const aes::key k) {
+  for (int i = 0; i < k.size(); ++i) {
+    cout << setw(4) << left << hex << k.at(i) << dec;
+
+    if ((i + 1) % 4 == 0) cout << endl;
+  }
+  cout << endl;
+}
+
 int main() {
   string message = "";
+  string keyString = "";
 
   cout << "Nachricht: ";
   getline(cin, message);
+
+  cout << "Key: ";
+  getline(cin, keyString);
+
+  cout << endl << "getKey.."  << endl << endl;
+  aes::key key = getKey(keyString);
+  printKey(key);
 
   cout << endl << "getBlocks.." << endl << endl;
   vector<aes::block> blocks = getBlocks(message);

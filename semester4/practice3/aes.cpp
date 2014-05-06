@@ -92,4 +92,16 @@ namespace aes {
 
     b = transformate(columns);
   }
+
+  void addRoundKey(block &b, const key k) {
+    block columns = transformate(b);
+
+    for (int i = 0; i < columns.size(); ++i) { // Each row
+      for (int j = 0; j < columns.at(i).size(); ++j) { // Each item
+        columns.at(i).at(j) = columns.at(i).at(j) ^ k.at(j);
+      }
+    }
+
+    b = transformate(columns);
+  }
 }
