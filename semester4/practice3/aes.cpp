@@ -1,4 +1,8 @@
+#include <vector>
+
 #include "aes.h"
+
+using namespace std;
 
 namespace aes {
   unsigned char sbox[256] = {
@@ -48,16 +52,28 @@ namespace aes {
     }
   }
 
-  void mixColumns(block &b) {
-    int matrix[16] = {2, 3, 1, 1,
-                      1, 2, 3, 1,
-                      1, 1, 2, 3,
-                      3, 1, 1, 2};
+  vector<column> getColumns(const block b) {
+    vector<column> columns;
 
     for (int i = 0; i < b.size(); ++i) { // Each row
       for (int j = 0; j < b.at(i).size(); ++j) { // Each item
-        b.at(i).at(j) *= matrix[i * 4 + j];
+        if (columns.size() <= j) {
+          // We need more columns, create one
+          column c;
+          // Push back value
+          c.push_back(b.at(i).at(j));
+          // Push back column
+          columns.push_back(c);
+        } else {
+          // Column exists, push back value
+          columns.at(j).push_back(b.at(i).at(j));
+        }
       }
     }
+
+    return columns;
+  }
+
+  void mixColumns(block &b) {
   }
 }

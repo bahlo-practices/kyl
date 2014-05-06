@@ -100,11 +100,12 @@ int main() {
   }
   printBlocks(blocks);
 
-  cout << endl << "mixColumns.." << endl << endl;
+  cout << endl << "getColumns.." << endl << endl;
+  vector<aes::block> columned;
   for (size_t i = 0; i < blocks.size(); ++i) {
-    aes::mixColumns(blocks.at(i));
+    columned.push_back(aes::getColumns(blocks.at(i)));
   }
-  printBlocks(blocks);
+  printBlocks(columned);
 
   return 0;
 }
