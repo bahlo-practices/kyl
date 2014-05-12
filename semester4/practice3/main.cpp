@@ -145,37 +145,5 @@ int main() {
   }
   printBlocks(blocks);
 
-  cout << endl << "textMixColumns.." << endl << endl;
-  vector<aes::block> testBlocks;
-  aes::block testBlock;
-  aes::column testColumn;
-  testColumn.push_back(0xD4);
-  testColumn.push_back(0xE0);
-  testColumn.push_back(0xB8);
-  testColumn.push_back(0x1E);
-  testBlock.push_back(testColumn);
-  testColumn.at(0) = 0xBF;
-  testColumn.at(1) = 0xB4;
-  testColumn.at(2) = 0x41;
-  testColumn.at(3) = 0x27;
-  testBlock.push_back(testColumn);
-  testColumn.at(0) = 0x5D;
-  testColumn.at(1) = 0x52;
-  testColumn.at(2) = 0x11;
-  testColumn.at(3) = 0x98;
-  testBlock.push_back(testColumn);
-  testColumn.at(0) = 0x30;
-  testColumn.at(1) = 0xAE;
-  testColumn.at(2) = 0xF1;
-  testColumn.at(3) = 0xE5;
-  testBlock.push_back(testColumn);
-  testBlocks.push_back(testBlock);
-  printBlocks(testBlocks);
-  cout << endl << "mixColumns.." << endl;
-  for (size_t i = 0; i < testBlocks.size(); ++i) {
-    aes::mixColumns(testBlocks.at(i));
-  }
-  printBlocks(testBlocks);
-
   return 0;
 }
