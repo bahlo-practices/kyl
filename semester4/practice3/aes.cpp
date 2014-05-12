@@ -78,29 +78,38 @@ namespace aes {
     return transformated;
   }
 
+  int galois(int v, int times) {
+    bool h = v >> 7; // Highest bit
+    switch(times) {
+      case 2:
+        v = v << 1; // Shift to the left == * 2
+
+        if (h) {
+          v ^= 0x1B;
+        }
+
+        break;
+      case 3:
+        v ^= galois(v, 2);
+        break;
+      default:
+        break;
+    }
+
+    return v;
+  }
+
   // FIXME: H should be 0x19 after mixColumns, it isn't
   // http://en.wikipedia.org/wiki/Rijndael_mix_columns#Implementation_example
   void mixColumns(block &b) {
     block columns = transformate(b);
 
-    column c;
-    column d;
-    unsigned char h;
-
+    int v;
     for (int i = 0; i < columns.size(); ++i) { // For each column
-      c = columns.at(i);
-      d = columns.at(i);
-
-      for (int j = 0; j < 4; ++j) {
-        h = (unsigned char)((signed char) c.at(j) >> 7);
-        d.at(j) = c.at(j) << 1;
-        d.at(j) ^= 0x1B & h;
+      for (int j = 0;j < columns.at(i).size(); ++j) { // For each value
+        v = columns.at(i).at(j);
+        cout << galois(v, 2) << endl;
       }
-
-      columns.at(i).at(0) = d.at(0) ^ c.at(3) ^ c.at(2) ^ d.at(1) ^ c.at(1);
-      columns.at(i).at(1) = d.at(1) ^ c.at(0) ^ c.at(3) ^ d.at(2) ^ c.at(2);
-      columns.at(i).at(2) = d.at(2) ^ c.at(1) ^ c.at(0) ^ d.at(3) ^ c.at(3);
-      columns.at(i).at(3) = d.at(3) ^ c.at(2) ^ c.at(1) ^ d.at(0) ^ c.at(0);
     }
 
     b = transformate(columns);
