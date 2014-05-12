@@ -86,7 +86,6 @@ namespace aes {
   }
 
   int galois(int v, int times) {
-    cout << "galois(" << v << ", " << times << ") = ";
     bool h = v >> 7; // Highest bit
     switch(times) {
       case 2:
@@ -104,7 +103,6 @@ namespace aes {
         break;
     }
 
-    cout << v << endl;
     return v;
   }
 
@@ -118,17 +116,12 @@ namespace aes {
       for (int j = 0; j < c.size(); ++j) { // For each value
         v = 0;
 
+        // Loop through each value, xor with galois product with matrix[]
         for (int k = 0; k < columns.at(i).size(); ++k) {
           v ^= galois(c.at(k), matrix[j * 4 + k]);
         }
 
-        /* MATRIX:    BLOCK:
-           0 1 2 3    a b c d
-           4 5 6 7    e f g h
-           8 9 0 1    i j k l
-           2 3 4 5    m n o p */
-
-        columns.at(i).at(j) = v;
+        columns.at(i).at(j) = v % 256;
       }
     }
 
