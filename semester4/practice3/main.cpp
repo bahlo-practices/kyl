@@ -76,25 +76,6 @@ vector<aes::block> getBlocks(string message) {
   return blocks;
 }
 
-aes::key getKey(const string sk) {
-  aes::key k;
-
-  for (int i = 0; i < sk.size(); ++i) {
-    k.push_back((int) sk[i]);
-  }
-
-  return k;
-}
-
-void printKey(const aes::key k) {
-  for (int i = 0; i < k.size(); ++i) {
-    cout << setw(4) << left << hex << k.at(i) << dec;
-
-    if ((i + 1) % 4 == 0) cout << endl;
-  }
-  cout << endl;
-}
-
 int main() {
   string message = "";
   string keyString = "";
@@ -105,9 +86,11 @@ int main() {
   cout << "Key: ";
   getline(cin, keyString);
 
-  cout << endl << "getKey.."  << endl << endl;
-  aes::key key = getKey(keyString);
-  printKey(key);
+  cout << endl << "getRoundKeys.."  << endl << endl;
+  vector<aes::block> keyBlocks = getBlocks(keyString);
+  aes::block key = keyBlocks.at(0);
+  vector<aes::block> keys = aes::getRoundKeys(key);
+  printBlocks(keys);
 
   cout << endl << "getBlocks.." << endl << endl;
   vector<aes::block> blocks = getBlocks(message);

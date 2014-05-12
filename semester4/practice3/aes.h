@@ -12,4 +12,5 @@ namespace aes {
   void shiftRows(block &b);
   block transformate(const block b);
   void mixColumns(block &b);
+  vector<block> getRoundKeys(const block key);
 }
