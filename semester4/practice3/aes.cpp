@@ -6,7 +6,7 @@
 using namespace std;
 
 namespace aes {
-  unsigned char sbox[256] = {
+  const static unsigned char sbox[256] = {
     0x63, 0x7C, 0x77, 0x7B, 0xF2, 0x6B, 0x6F, 0xC5, 0x30, 0x01, 0x67, 0x2B, 0xFE, 0xD7, 0xAB, 0x76,
     0xCA, 0x82, 0xC9, 0x7D, 0xFA, 0x59, 0x47, 0xF0, 0xAD, 0xD4, 0xA2, 0xAF, 0x9C, 0xA4, 0x72, 0xC0,
     0xB7, 0xFD, 0x93, 0x26, 0x36, 0x3F, 0xF7, 0xCC, 0x34, 0xA5, 0xE5, 0xF1, 0x71, 0xD8, 0x31, 0x15,
@@ -23,6 +23,13 @@ namespace aes {
     0x70, 0x3E, 0xB5, 0x66, 0x48, 0x03, 0xF6, 0x0E, 0x61, 0x35, 0x57, 0xB9, 0x86, 0xC1, 0x1D, 0x9E,
     0xE1, 0xF8, 0x98, 0x11, 0x69, 0xD9, 0x8E, 0x94, 0x9B, 0x1E, 0x87, 0xE9, 0xCE, 0x55, 0x28, 0xDF,
     0x8C, 0xA1, 0x89, 0x0D, 0xBF, 0xE6, 0x42, 0x68, 0x41, 0x99, 0x2D, 0x0F, 0xB0, 0x54, 0xBB, 0x16
+  };
+
+  const static int matrix[16] = {
+    2, 3, 1, 1,
+    1, 2, 3, 1,
+    1, 1, 2, 3,
+    3, 1, 1, 2
   };
 
   void subBytes(block &b) {
@@ -79,6 +86,7 @@ namespace aes {
   }
 
   int galois(int v, int times) {
+    cout << "galois(" << v << ", " << times << ") = ";
     bool h = v >> 7; // Highest bit
     switch(times) {
       case 2:
@@ -96,19 +104,31 @@ namespace aes {
         break;
     }
 
+    cout << v << endl;
     return v;
   }
 
-  // FIXME: H should be 0x19 after mixColumns, it isn't
-  // http://en.wikipedia.org/wiki/Rijndael_mix_columns#Implementation_example
   void mixColumns(block &b) {
     block columns = transformate(b);
 
     int v;
+    column c;
     for (int i = 0; i < columns.size(); ++i) { // For each column
-      for (int j = 0;j < columns.at(i).size(); ++j) { // For each value
-        v = columns.at(i).at(j);
-        cout << galois(v, 2) << endl;
+      c = columns.at(i);
+      for (int j = 0; j < c.size(); ++j) { // For each value
+        v = 0;
+
+        for (int k = 0; k < columns.at(i).size(); ++k) {
+          v ^= galois(c.at(k), matrix[j * 4 + k]);
+        }
+
+        /* MATRIX:    BLOCK:
+           0 1 2 3    a b c d
+           4 5 6 7    e f g h
+           8 9 0 1    i j k l
+           2 3 4 5    m n o p */
+
+        columns.at(i).at(j) = v;
       }
     }
 
