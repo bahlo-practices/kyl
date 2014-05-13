@@ -160,33 +160,4 @@ namespace aes {
 
     b = transformate(columns);
   }
-
-  vector<block> getRoundKeys(const block key) {
-    vector<block> keys;
-
-    keys.push_back(key);
-
-    block columns = transformate(key);
-    block rows;
-
-    // RotWord
-    column lastColumn = columns.at(3);
-    rotate(lastColumn.begin(), lastColumn.end(), lastColumn.end());
-
-    // subBytes
-    subBytes(lastColumn);
-
-    // xor with first column and rcon
-    column rc = rcon(4);
-    for (size_t i = 0;i < lastColumn.size(); ++i) {
-      lastColumn.at(i) ^= columns.at(0).at(i) ^ rc.at(i);
-    }
-    rows.push_back(lastColumn);
-
-    for (size_t i = 1; i < columns.size(); ++i) {
-
-    }
-
-    return keys;
-  }
 }
