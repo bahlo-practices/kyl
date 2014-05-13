@@ -160,4 +160,24 @@ namespace aes {
 
     b = transformate(columns);
   }
+
+  string hash(const vector<block> b, const block k) {
+    string h = "";
+    char enc; // The individual char encoded
+
+    // Loop through each value, xoring with the equivalent in k
+    for (int i = 0; i < b.size(); ++i) {
+      // b.at(i) is our block
+      for (int j = 0; j < b.at(i).size(); ++j) {
+        // b.at(i).at(j) is our row
+        for (int l = 0; l < b.at(i).at(j).size(); ++l) {
+          // b.at(i).at(j).at(l) is our value
+          enc = b.at(i).at(j).at(l) ^ k.at(j).at(l);
+          h += enc;
+        }
+      }
+     }
+
+     return h;
+  }
 }

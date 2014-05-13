@@ -151,5 +151,8 @@ int main() {
   }
   printBlocks(blocks);
 
+  cout << endl << "hash.." << endl << endl;
+  cout << aes::hash(blocks, key) << endl << endl;
+
   return 0;
 }

@@ -11,4 +11,5 @@ namespace aes {
   void shiftRows(block &b);
   block transformate(const block b);
   void mixColumns(block &b);
+  string hash(const vector<block> b, const block k);
 }
