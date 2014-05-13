@@ -23,14 +23,19 @@ void fillBlock(aes::block &b) {
   }
 }
 
+void printBlock(const aes::block block) {
+  // Each Row
+  for (size_t j = 0; j < block.size(); j++) { // Block
+    for (size_t k = 0; k < block.at(j).size(); k++) {
+      cout << setw(4) << left << hex << block.at(j).at(k) << dec;
+    }
+    cout << endl;
+  }
+}
+
 void printBlocks(const vector<aes::block> blocks) {
   for (size_t i = 0; i < blocks.size(); i++) { // Blocks
-    for (size_t j = 0; j < blocks.at(i).size(); j++) { // Block
-      for (size_t k = 0; k < blocks.at(i).at(j).size(); k++) { // Row
-        cout << setw(4) << left << hex << blocks.at(i).at(j).at(k) << dec;
-      }
-      cout << endl;
-    }
+    printBlock(blocks.at(i));
     cout << endl;
   }
 }
@@ -76,6 +81,25 @@ vector<aes::block> getBlocks(string message) {
   return blocks;
 }
 
+aes::block getKey(string k) {
+  const char *c = k.c_str();
+  aes::block b;
+  aes::row r;
+
+  for (size_t i = 0; i < sizeof(c); ++i) {
+    r.push_back((int) c[i]);
+
+    if ((i + 1) % 4 == 0) {
+      b.push_back(r);
+
+      aes::row tmp;
+      r = tmp;
+    }
+  }
+
+  return b;
+}
+
 int main() {
   string message = "";
   string keyString = "";
@@ -86,11 +110,10 @@ int main() {
   cout << "Key: ";
   getline(cin, keyString);
 
-  cout << endl << "getRoundKeys.."  << endl << endl;
-  vector<aes::block> keyBlocks = getBlocks(keyString);
-  aes::block key = keyBlocks.at(0);
-  vector<aes::block> keys = aes::getRoundKeys(key);
-  printBlocks(keys);
+  cout << endl << "getKey.."  << endl << endl;
+  aes::block key = getKey(keyString);
+  fillBlock(key); // Fill with zeros
+  printBlock(key);
 
   cout << endl << "getBlocks.." << endl << endl;
   vector<aes::block> blocks = getBlocks(message);
