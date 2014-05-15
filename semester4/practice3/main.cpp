@@ -151,8 +151,10 @@ int main() {
   }
   printBlocks(blocks);
 
-  cout << endl << "hash.." << endl << endl;
-  cout << aes::hash(blocks, key) << endl << endl;
+
+  cout << endl << "getRoundKeys.." << endl << endl;
+  vector<aes::block> keys = aes::getRoundKeys(key);
+  printBlocks(keys);
 
   return 0;
 }

@@ -161,23 +161,44 @@ namespace aes {
     b = transformate(columns);
   }
 
-  string hash(const vector<block> b, const block k) {
-    string h = "";
-    char enc; // The individual char encoded
+  vector<block> getRoundKeys(block &key) {
+    vector<block> roundKeys;
+    roundKeys.push_back(key);
+    block columns = transformate(key);
 
-    // Loop through each value, xoring with the equivalent in k
-    for (int i = 0; i < b.size(); ++i) {
-      // b.at(i) is our block
-      for (int j = 0; j < b.at(i).size(); ++j) {
-        // b.at(i).at(j) is our row
-        for (int l = 0; l < b.at(i).at(j).size(); ++l) {
-          // b.at(i).at(j).at(l) is our value
-          enc = b.at(i).at(j).at(l) ^ k.at(j).at(l);
-          h += enc;
-        }
+    // Get last column
+    column lastColumn = columns.at(3);
+
+    // Rotate to the left
+    rotate(lastColumn.begin(), lastColumn.begin() + 1, lastColumn.end());
+
+    // Substitute
+    subBytes(lastColumn);
+
+    // Xor with first column and rcon
+    column nextColumn;
+    column firstColumn = columns.at(0);
+    column tmpRcon = rcon(0);
+    for (size_t i = 0; i < firstColumn.size(); ++i) {
+      nextColumn.push_back(firstColumn.at(i) ^ lastColumn.at(i) ^ tmpRcon.at(i));
+    }
+
+    // Create next block and push next column
+    block secondBlock;
+    secondBlock.push_back(nextColumn);
+
+    for (size_t i = 1; i < 4; ++i) {
+      column newColumn;
+
+      for (size_t j = 0; j < 4; ++j) {
+        newColumn.push_back(secondBlock.at(i - 1).at(j) ^ key.at(i).at(j));
       }
-     }
 
-     return h;
+      secondBlock.push_back(newColumn);
+    }
+
+    roundKeys.push_back(secondBlock);
+
+    return roundKeys;
   }
 }
