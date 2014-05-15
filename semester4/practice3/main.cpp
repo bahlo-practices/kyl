@@ -150,6 +150,13 @@ int main() {
   }
   printBlocks(blocks);
 
+  cout << endl << "inverseSubBytes.." << endl << endl;
+  vector<aes::block> tmp = blocks;
+  for (size_t i = 0; i < tmp.size(); ++i) {
+    aes::inverseSubBytes(tmp.at(i));
+  }
+  printBlocks(tmp);
+
   cout << endl << "shiftRows.." << endl << endl;
   for (size_t i = 0; i < blocks.size(); ++i) {
     aes::shiftRows(blocks.at(i));
@@ -157,7 +164,7 @@ int main() {
   printBlocks(blocks);
 
   cout << endl << "inverseShiftRows.." << endl << endl;
-  vector<aes::block> tmp = blocks;
+  tmp = blocks;
   for (size_t i = 0; i < tmp.size(); ++i) {
     aes::inverseShiftRows(tmp.at(i));
   }

@@ -60,6 +60,24 @@ namespace aes {
     }
   }
 
+  void inverseSubBytes(column &c) {
+    for (size_t i = 0; i < c.size(); ++i) {
+      // For each element
+      for (size_t j = 0; j < sizeof(sbox); ++j) {
+        if (sbox[j] == c.at(i)) {
+          c.at(i) = j;
+          break;
+        }
+      }
+    }
+  }
+
+  void inverseSubBytes(block &b) {
+    for (size_t i = 0; i < b.size(); ++i) {
+      inverseSubBytes(b.at(i));
+    }
+  }
+
   void shiftRows(block &b) {
     for (size_t i = 0; i < b.size(); ++i) {
       switch (i) {
