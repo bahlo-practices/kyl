@@ -154,40 +154,43 @@ namespace aes {
     vector<block> roundKeys;
     roundKeys.push_back(key);
 
-    block columns = transformate(key);
+    block lastBlockColumns;
+    column lastColumn;
+    for (size_t i = 0; i < 10; ++i) {
+      // Get last column
+      lastBlockColumns = transformate(roundKeys.at(i));
+      lastColumn = lastBlockColumns.at(3);
 
-    // Get last column
-    column lastColumn = columns.at(3);
+      // Rotate to the left
+      rotate(lastColumn.begin(), lastColumn.begin() + 1, lastColumn.end());
 
-    // Rotate to the left
-    rotate(lastColumn.begin(), lastColumn.begin() + 1, lastColumn.end());
+      // Substitute
+      subBytes(lastColumn);
 
-    // Substitute
-    subBytes(lastColumn);
-
-    // Xor with first column and rcon
-    column nextColumn;
-    column firstColumn = columns.at(0);
-    column tmpRcon = rcon(0);
-    for (size_t i = 0; i < 4; ++i) {
-      nextColumn.push_back(firstColumn.at(i) ^ lastColumn.at(i) ^ tmpRcon.at(i));
-    }
-
-    // Create next block and push next column
-    block secondBlock;
-    secondBlock.push_back(nextColumn);
-
-    for (size_t i = 1; i < 4; ++i) {
-      column newColumn;
-
-      for (size_t j = 0; j < 4; ++j) {
-        newColumn.push_back(secondBlock.at(i - 1).at(j) ^ columns.at(i).at(j));
+      // Xor with first column and rcon
+      column nextColumn;
+      column firstColumn = lastBlockColumns.at(0);
+      column tmpRcon = rcon(i);
+      for (size_t i = 0; i < 4; ++i) {
+        nextColumn.push_back(firstColumn.at(i) ^ lastColumn.at(i) ^ tmpRcon.at(i));
       }
 
-      secondBlock.push_back(newColumn);
-    }
+      // Create next block and push next column
+      block nextBlock;
+      nextBlock.push_back(nextColumn);
 
-    roundKeys.push_back(transformate(secondBlock));
+      for (size_t i = 1; i < 4; ++i) {
+        column newColumn;
+
+        for (size_t j = 0; j < 4; ++j) {
+          newColumn.push_back(nextBlock.at(i - 1).at(j) ^ lastBlockColumns.at(i).at(j));
+        }
+
+        nextBlock.push_back(newColumn);
+      }
+
+      roundKeys.push_back(transformate(nextBlock));
+    }
 
     return roundKeys;
   }
