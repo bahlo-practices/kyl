@@ -181,5 +181,11 @@ int main() {
   vector<aes::block> keys = aes::getRoundKeys(key);
   printBlocks(keys);
 
+
+  cout << endl << "hash.." << endl << endl;
+  vector<aes::block> input = getBlocks(message);
+  vector<aes::block> cipher = aes::hash(input, key);
+  printBlocks(cipher);
+
   return 0;
 }

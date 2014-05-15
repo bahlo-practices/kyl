@@ -148,7 +148,7 @@ namespace aes {
     b = transformate(columns);
   }
 
-  vector<block> getRoundKeys(block &key) {
+  vector<block> getRoundKeys(const block key) {
     vector<block> roundKeys;
     roundKeys.push_back(key);
 
@@ -195,5 +195,45 @@ namespace aes {
     }
 
     return roundKeys;
+  }
+
+  void addRoundKey(block &input, block key) {
+    for (size_t i = 0; i < input.size(); ++i) {
+      for (size_t j = 0; j < input.at(i).size(); ++j) {
+        input.at(i).at(j) ^= key.at(i).at(j);
+      }
+    }
+  }
+
+  void roundIt(block &input, const block roundKey) {
+    subBytes(input);
+    shiftRows(input);
+    mixColumns(input);
+    addRoundKey(input, roundKey);
+  }
+
+  vector<block> hash(const vector<block> input, const block key) {
+    vector<block> roundKeys = getRoundKeys(key);
+    vector<block> cipher = input;
+
+    // Initial round
+    for (size_t i = 0; i < cipher.size(); ++i) {
+      addRoundKey(cipher.at(i), roundKeys.at(0));
+    }
+
+    for (size_t i = 0; i < 9; ++i) {
+      for (size_t j = 0; j < cipher.size(); ++j) {
+        roundIt(cipher.at(j), roundKeys.at(i));
+      }
+    }
+
+    // Final round
+    for (size_t i = 0; i < cipher.size(); ++i) {
+      subBytes(cipher.at(i));
+      shiftRows(cipher.at(i));
+      addRoundKey(cipher.at(i), roundKeys.at(9));
+    }
+
+    return cipher;
   }
 }
