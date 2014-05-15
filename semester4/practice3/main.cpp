@@ -111,7 +111,32 @@ int main() {
   getline(cin, keyString);
 
   cout << endl << "getKey.."  << endl << endl;
-  aes::block key = getKey(keyString);
+  // aes::block key = getKey(keyString);
+  // Mock key
+  aes::block key;
+  aes::column c;
+  c.push_back(0x2b);
+  c.push_back(0x28);
+  c.push_back(0xab);
+  c.push_back(0x09);
+  key.push_back(c);
+  c.at(0) = 0x7e;
+  c.at(1) = 0xae;
+  c.at(2) = 0xf7;
+  c.at(3) = 0xcf;
+  key.push_back(c);
+  c.at(0) = 0x15;
+  c.at(1) = 0xd2;
+  c.at(2) = 0x15;
+  c.at(3) = 0x4f;
+  key.push_back(c);
+  c.at(0) = 0x16;
+  c.at(1) = 0xa6;
+  c.at(2) = 0x88;
+  c.at(3) = 0x3c;
+  key.push_back(c);
+  // End mock key
+
   fillBlock(key); // Fill with zeros
   printBlock(key);
 

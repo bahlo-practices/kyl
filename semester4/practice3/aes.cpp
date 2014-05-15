@@ -44,7 +44,7 @@ namespace aes {
     column result;
 
     for (size_t i = 0;i < 16; ++i) {
-      result.push_back(rconMatrix[i * 16 + col]);
+      result.push_back(rconMatrix[i * 10 + col]);
     }
 
     return result;
@@ -153,6 +153,7 @@ namespace aes {
   vector<block> getRoundKeys(block &key) {
     vector<block> roundKeys;
     roundKeys.push_back(key);
+
     block columns = transformate(key);
 
     // Get last column
@@ -168,7 +169,7 @@ namespace aes {
     column nextColumn;
     column firstColumn = columns.at(0);
     column tmpRcon = rcon(0);
-    for (size_t i = 0; i < firstColumn.size(); ++i) {
+    for (size_t i = 0; i < 4; ++i) {
       nextColumn.push_back(firstColumn.at(i) ^ lastColumn.at(i) ^ tmpRcon.at(i));
     }
 
@@ -186,7 +187,7 @@ namespace aes {
       secondBlock.push_back(newColumn);
     }
 
-    roundKeys.push_back(secondBlock);
+    roundKeys.push_back(transformate(secondBlock));
 
     return roundKeys;
   }
