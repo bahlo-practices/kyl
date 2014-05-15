@@ -181,7 +181,7 @@ namespace aes {
       column newColumn;
 
       for (size_t j = 0; j < 4; ++j) {
-        newColumn.push_back(secondBlock.at(i - 1).at(j) ^ key.at(i).at(j));
+        newColumn.push_back(secondBlock.at(i - 1).at(j) ^ columns.at(i).at(j));
       }
 
       secondBlock.push_back(newColumn);
