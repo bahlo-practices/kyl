@@ -1,6 +1,4 @@
 #include <vector>
-#include <iostream>
-#include <iomanip>
 
 #include "aes.h"
 
@@ -171,8 +169,12 @@ namespace aes {
       column nextColumn;
       column firstColumn = lastBlockColumns.at(0);
       column tmpRcon = rcon(i);
+
       for (size_t i = 0; i < 4; ++i) {
-        nextColumn.push_back(firstColumn.at(i) ^ lastColumn.at(i) ^ tmpRcon.at(i));
+        int rcon = tmpRcon.at(i);
+        if (rcon == -128) rcon = 128; // Kill me
+
+        nextColumn.push_back(firstColumn.at(i) ^ lastColumn.at(i) ^ rcon);
       }
 
       // Create next block and push next column
