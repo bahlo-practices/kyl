@@ -209,7 +209,7 @@ namespace aes {
     addRoundKey(input, roundKey);
   }
 
-  vector<block> hash(const vector<block> input, const block key) {
+  vector<block> encrypt(const vector<block> input, const block key) {
     vector<block> roundKeys = getRoundKeys(key);
     vector<block> cipher = input;
 
@@ -232,5 +232,36 @@ namespace aes {
     }
 
     return cipher;
+  }
+
+  void inverseRoundIt(block &input, const block roundKey) {
+    addRoundKey(input, roundKey);
+    inverseMixColumns(input);
+    inverseShiftRows(input);
+    inverseSubBytes(input);
+  }
+
+  vector<block> decrypt(const vector<block> cipher, const block key) {
+    vector<block> roundKeys = getRoundKeys(key);
+    vector<block> clearText = cipher;
+
+    // Initial round
+    for (size_t i = 0; i < clearText.size(); ++i) {
+      addRoundKey(clearText.at(i), roundKeys.at(10));
+      inverseShiftRows(clearText.at(i));
+      inverseSubBytes(clearText.at(i));
+    }
+
+    for (size_t i = 0; i < 9; ++i) {
+      for (size_t j = 0; j < clearText.size(); ++j) {
+        inverseRoundIt(clearText.at(i), roundKeys.at(i + 1));
+      }
+    }
+
+    for (size_t i = 0; i < clearText.size(); ++i) {
+      addRoundKey(clearText.at(i), roundKeys.at(0));
+    }
+
+    return clearText;
   }
 }

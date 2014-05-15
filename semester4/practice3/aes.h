@@ -12,5 +12,6 @@ namespace aes {
   block transformate(const block b);
   void mixColumns(block &b);
   vector<block> getRoundKeys(const block key);
-  vector<block> hash(const vector<block> input, const block key);
+  vector<block> encrypt(const vector<block> input, const block key);
+  vector<block> decrypt(const vector<block> cipher, const block key);
 }

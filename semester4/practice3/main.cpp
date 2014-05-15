@@ -212,7 +212,7 @@ int main() {
   cout << "Input:" << endl;
   printBlocks(mockInput);
   cout << "Cipher:" << endl;
-  vector<aes::block> cipher = aes::hash(mockInput, key);
+  vector<aes::block> cipher = aes::encrypt(mockInput, key);
   printBlocks(cipher);
 
   return 0;
