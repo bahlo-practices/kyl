@@ -183,8 +183,36 @@ int main() {
 
 
   cout << endl << "hash.." << endl << endl;
-  vector<aes::block> input = getBlocks(message);
-  vector<aes::block> cipher = aes::hash(input, key);
+  // Mock it
+  vector<aes::block> mockInput;
+  aes::block mockBlock;
+  aes::row r;
+  r.push_back(0x32);
+  r.push_back(0x88);
+  r.push_back(0x31);
+  r.push_back(0xe0);
+  mockBlock.push_back(r);
+  r.at(0) = 0x43;
+  r.at(1) = 0x5a;
+  r.at(2) = 0x31;
+  r.at(3) = 0x37;
+  mockBlock.push_back(r);
+  r.at(0) = 0xf6;
+  r.at(1) = 0x30;
+  r.at(2) = 0x98;
+  r.at(3) = 0x07;
+  mockBlock.push_back(r);
+  r.at(0) = 0xa8;
+  r.at(1) = 0x8d;
+  r.at(2) = 0xa2;
+  r.at(3) = 0x34;
+  mockBlock.push_back(r);
+  mockInput.push_back(mockBlock);
+
+  cout << "Input:" << endl;
+  printBlocks(mockInput);
+
+  vector<aes::block> cipher = aes::hash(mockInput, key);
   printBlocks(cipher);
 
   return 0;
