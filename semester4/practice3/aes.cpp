@@ -236,9 +236,29 @@ namespace aes {
 
   void inverseRoundIt(block &input, const block roundKey) {
     addRoundKey(input, roundKey);
-    inverseMixColumns(input);
+    // inverseMixColumns(input);
     inverseShiftRows(input);
-    inverseSubBytes(input);
+    // inverseSubBytes(input);
+  }
+
+  void inverseShiftRows(block &b) {
+    for (size_t i = 0; i < b.size(); ++i) {
+      switch (i) {
+        case 0:
+          break;
+        case 1:
+          rotate(b.at(i).begin(), b.at(i).end() - 1, b.at(i).end());
+          break;
+        case 2:
+          rotate(b.at(i).begin(), b.at(i).end() - 2, b.at(i).end());
+          break;
+        case 3:
+          rotate(b.at(i).begin(), b.at(i).end() - 3, b.at(i).end());
+          break;
+        default:
+          break;
+      }
+    }
   }
 
   vector<block> decrypt(const vector<block> cipher, const block key) {
@@ -249,7 +269,7 @@ namespace aes {
     for (size_t i = 0; i < clearText.size(); ++i) {
       addRoundKey(clearText.at(i), roundKeys.at(10));
       inverseShiftRows(clearText.at(i));
-      inverseSubBytes(clearText.at(i));
+      // inverseSubBytes(clearText.at(i));
     }
 
     for (size_t i = 0; i < 9; ++i) {

@@ -156,6 +156,13 @@ int main() {
   }
   printBlocks(blocks);
 
+  cout << endl << "inverseShiftRows.." << endl << endl;
+  vector<aes::block> tmp = blocks;
+  for (size_t i = 0; i < tmp.size(); ++i) {
+    aes::inverseShiftRows(tmp.at(i));
+  }
+  printBlocks(tmp);
+
   cout << endl << "transformate.." << endl << endl;
   vector<aes::block> columned;
   for (size_t i = 0; i < blocks.size(); ++i) {
