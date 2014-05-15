@@ -16,4 +16,5 @@ namespace aes {
   vector<block> decrypt(const vector<block> cipher, const block key);
   void inverseShiftRows(block &b);
   void inverseSubBytes(block &b);
+  void inverseMixColumns(block &b);
 }

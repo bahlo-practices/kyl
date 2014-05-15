@@ -190,6 +190,13 @@ int main() {
   }
   printBlocks(blocks);
 
+  cout << endl << "inverseMixColumns.." << endl << endl;
+  tmp = blocks;
+  for (size_t i = 0; i < tmp.size(); ++i) {
+    aes::inverseMixColumns(tmp.at(i));
+  }
+  printBlocks(tmp);
+
 
   cout << endl << "getRoundKeys.." << endl << endl;
   vector<aes::block> keys = aes::getRoundKeys(key);

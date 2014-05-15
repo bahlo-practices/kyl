@@ -31,6 +31,13 @@ namespace aes {
     0x3, 0x1, 0x1, 0x2
   };
 
+  const static char inverseMatrix[16] = {
+    0xe, 0xb, 0xd, 0x9,
+    0x9, 0xe, 0xb, 0xd,
+    0xd, 0x9, 0xe, 0xb,
+    0xb, 0xd, 0x9, 0xe
+  };
+
   const static char rconMatrix[40] = {
     0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -134,6 +141,15 @@ namespace aes {
       case 3:
         v ^= galois(v, 2);
         break;
+      case 9:
+        v = galois(v, 3) ^ galois(v, 3) ^ galois(v, 3);
+        break;
+      case 13:
+        v ^= galois(v, 9) ^ galois(v, 2) ^ v;
+        break;
+      case 14:
+        v ^= galois(v, 13);
+        break;
       default:
         break;
     }
@@ -154,6 +170,28 @@ namespace aes {
         // Loop through each value, xor with galois product with matrix[]
         for (int k = 0; k < columns.at(i).size(); ++k) {
           v ^= galois(c.at(k), matrix[j * 4 + k]);
+        }
+
+        columns.at(i).at(j) = v % 256;
+      }
+    }
+
+    b = transformate(columns);
+  }
+
+  void inverseMixColumns(block &b) {
+    block columns = transformate(b);
+
+    int v;
+    column c;
+    for (int i = 0; i < columns.size(); ++i) { // For each column
+      c = columns.at(i);
+      for (int j = 0; j < c.size(); ++j) { // For each value
+        v = 0;
+
+        // Loop through each value, xor with galois product with matrix[]
+        for (int k = 0; k < columns.at(i).size(); ++k) {
+          v ^= galois(c.at(k), inverseMatrix[j * 4 + k]);
         }
 
         columns.at(i).at(j) = v % 256;
@@ -256,7 +294,7 @@ namespace aes {
     addRoundKey(input, roundKey);
     // inverseMixColumns(input);
     inverseShiftRows(input);
-    // inverseSubBytes(input);
+    inverseSubBytes(input);
   }
 
   void inverseShiftRows(block &b) {
@@ -287,7 +325,7 @@ namespace aes {
     for (size_t i = 0; i < clearText.size(); ++i) {
       addRoundKey(clearText.at(i), roundKeys.at(10));
       inverseShiftRows(clearText.at(i));
-      // inverseSubBytes(clearText.at(i));
+      inverseSubBytes(clearText.at(i));
     }
 
     for (size_t i = 0; i < 9; ++i) {
