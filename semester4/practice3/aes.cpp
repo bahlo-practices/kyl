@@ -50,10 +50,7 @@ namespace aes {
 
   void subBytes(column &c) {
     for (size_t j = 0; j < c.size(); ++j) {
-      int val = c.at(j);
-      int row = val / 16;
-      int col = val % 16;
-      c.at(j) = sbox[row * 16 + col];
+      c.at(j) = sbox[(int) c.at(j)];
     }
   }
 
@@ -223,7 +220,7 @@ namespace aes {
 
     for (size_t i = 0; i < 9; ++i) {
       for (size_t j = 0; j < cipher.size(); ++j) {
-        roundIt(cipher.at(j), roundKeys.at(i));
+        roundIt(cipher.at(j), roundKeys.at(i + 1));
       }
     }
 
@@ -231,7 +228,7 @@ namespace aes {
     for (size_t i = 0; i < cipher.size(); ++i) {
       subBytes(cipher.at(i));
       shiftRows(cipher.at(i));
-      addRoundKey(cipher.at(i), roundKeys.at(9));
+      addRoundKey(cipher.at(i), roundKeys.at(10));
     }
 
     return cipher;

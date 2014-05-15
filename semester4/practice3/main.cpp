@@ -211,7 +211,7 @@ int main() {
 
   cout << "Input:" << endl;
   printBlocks(mockInput);
-
+  cout << "Cipher:" << endl;
   vector<aes::block> cipher = aes::hash(mockInput, key);
   printBlocks(cipher);
 
