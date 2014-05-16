@@ -142,13 +142,15 @@ namespace aes {
         v ^= galois(v, 2);
         break;
       case 9:
-        v = galois(v, 3) ^ galois(v, 3) ^ galois(v, 3);
+        v ^= galois(galois(galois(v, 2), 2), 2);
         break;
+      case 11:
+        v ^= galois((galois(galois(v, 2), 2) ^ v), 2);
       case 13:
-        v ^= galois(v, 9) ^ galois(v, 2) ^ v;
+        v ^= galois(galois((galois(v, 2) ^ v), 2), 2);
         break;
       case 14:
-        v ^= galois(v, 13);
+        v = galois((galois((galois(v, 2) ^ v), 2) ^ v), 2);
         break;
       default:
         break;
