@@ -104,14 +104,15 @@ int main() {
   string message = "";
   string keyString = "";
 
-  cout << "Nachricht: ";
-  getline(cin, message);
+//  cout << "Nachricht: ";
+//  getline(cin, message);
+//
+//  cout << "Key: ";
+//  getline(cin, keyString);
 
-  cout << "Key: ";
-  getline(cin, keyString);
-
-  cout << endl << "getKey.."  << endl << endl;
+//  cout << endl << "getKey.."  << endl << endl;
   // aes::block key = getKey(keyString);
+  
   // Mock key
   aes::block key;
   aes::column c;
@@ -138,72 +139,8 @@ int main() {
   // End mock key
 
   fillBlock(key); // Fill with zeros
+  cout << "Key:" << endl;
   printBlock(key);
-
-  cout << endl << "getBlocks.." << endl << endl;
-  vector<aes::block> blocks = getBlocks(message);
-  printBlocks(blocks);
-
-  cout << endl << "subBytes.." << endl << endl;
-  for (size_t i = 0; i < blocks.size(); ++i) {
-    aes::subBytes(blocks.at(i));
-  }
-  printBlocks(blocks);
-
-  cout << endl << "inverseSubBytes.." << endl << endl;
-  vector<aes::block> tmp = blocks;
-  for (size_t i = 0; i < tmp.size(); ++i) {
-    aes::inverseSubBytes(tmp.at(i));
-  }
-  printBlocks(tmp);
-
-  cout << endl << "shiftRows.." << endl << endl;
-  for (size_t i = 0; i < blocks.size(); ++i) {
-    aes::shiftRows(blocks.at(i));
-  }
-  printBlocks(blocks);
-
-  cout << endl << "inverseShiftRows.." << endl << endl;
-  tmp = blocks;
-  for (size_t i = 0; i < tmp.size(); ++i) {
-    aes::inverseShiftRows(tmp.at(i));
-  }
-  printBlocks(tmp);
-
-  cout << endl << "transformate.." << endl << endl;
-  vector<aes::block> columned;
-  for (size_t i = 0; i < blocks.size(); ++i) {
-    columned.push_back(aes::transformate(blocks.at(i)));
-  }
-  printBlocks(columned);
-
-  cout << endl << "transformate#2.." << endl << endl;
-  vector<aes::block> rowed;
-  for (size_t i = 0; i < columned.size(); ++i) {
-    rowed.push_back(aes::transformate(columned.at(i)));
-  }
-  printBlocks(rowed);
-
-  cout << endl << "mixColumns.." << endl << endl;
-  for (size_t i = 0; i < blocks.size(); ++i) {
-    aes::mixColumns(blocks.at(i));
-  }
-  printBlocks(blocks);
-
-  cout << endl << "inverseMixColumns.." << endl << endl;
-  tmp = blocks;
-  for (size_t i = 0; i < tmp.size(); ++i) {
-    aes::inverseMixColumns(tmp.at(i));
-  }
-  printBlocks(tmp);
-
-
-  cout << endl << "getRoundKeys.." << endl << endl;
-  vector<aes::block> keys = aes::getRoundKeys(key);
-  printBlocks(keys);
-
-
-  cout << endl << "hash.." << endl << endl;
   // Mock it
   vector<aes::block> mockInput;
   aes::block mockBlock;
@@ -230,11 +167,77 @@ int main() {
   mockBlock.push_back(r);
   mockInput.push_back(mockBlock);
 
-  cout << "Input:" << endl;
+  cout << endl << "Input:" << endl;
   printBlocks(mockInput);
+
+//  cout << endl << "getBlocks.." << endl << endl;
+//  vector<aes::block> blocks = getBlocks(message);
+//  printBlocks(blocks);
+
+//  cout << endl << "subBytes.." << endl << endl;
+//  for (size_t i = 0; i < mockInput.size(); ++i) {
+//    aes::subBytes(mockInput.at(i));
+//  }
+//  printBlocks(mockInput);
+
+//  cout << endl << "inverseSubBytes.." << endl << endl;
+//  for (size_t i = 0; i < mockInput.size(); ++i) {
+//    aes::inverseSubBytes(mockInput.at(i));
+//  }
+//  printBlocks(mockInput);
+  
+//  cout << endl << "shiftRows.." << endl << endl;
+//  for (size_t i = 0; i < mockInput.size(); ++i) {
+//    aes::shiftRows(mockInput.at(i));
+//  }
+//  printBlocks(mockInput);
+
+//  cout << endl << "inverseShiftRows.." << endl << endl;
+//  for (size_t i = 0; i < mockInput.size(); ++i) {
+//    aes::inverseShiftRows(mockInput.at(i));
+//  }
+//  printBlocks(mockInput);
+
+//  cout << endl << "transformate.." << endl << endl;
+//  vector<aes::block> columned;
+//  for (size_t i = 0; i < mockInput.size(); ++i) {
+//    columned.push_back(aes::transformate(mockInput.at(i)));
+//  }
+//  printBlocks(columned);
+
+//  cout << endl << "transformate#2.." << endl << endl;
+//  vector<aes::block> rowed;
+//  for (size_t i = 0; i < columned.size(); ++i) {
+//    rowed.push_back(aes::transformate(columned.at(i)));
+//  }
+//  printBlocks(rowed);
+
+  cout << endl << "mixColumns.." << endl << endl;
+  for (size_t i = 0; i < mockInput.size(); ++i) {
+    aes::mixColumns(mockInput.at(i));
+  }
+  printBlocks(mockInput);
+
+  cout << endl << "inverseMixColumns.." << endl << endl;
+  for (size_t i = 0; i < mockInput.size(); ++i) {
+    aes::inverseMixColumns(mockInput.at(i));
+  }
+  printBlocks(mockInput);
+
+  
+/*
+
+  cout << endl << "getRoundKeys.." << endl << endl;
+  vector<aes::block> keys = aes::getRoundKeys(key);
+  printBlocks(keys);
+
+
+  cout << endl << "hash.." << endl << endl;
+  
   cout << "Cipher:" << endl;
   vector<aes::block> cipher = aes::encrypt(mockInput, key);
   printBlocks(cipher);
+ */
 
   return 0;
 }
