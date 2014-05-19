@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 #include "aes.h"
 
@@ -108,8 +109,8 @@ namespace aes {
     block transformate(const block b) {
         block transformated;
 
-        for (int i = 0; i < b.size(); ++i) { // Each row
-            for (int j = 0; j < b.at(i).size(); ++j) { // Each item
+        for (size_t i = 0; i < b.size(); ++i) { // Each row
+            for (size_t j = 0; j < b.at(i).size(); ++j) { // Each item
                 if (transformated.size() <= j) {
                     // We need more columns/rows, create one
                     vector<int> c;
@@ -130,6 +131,8 @@ namespace aes {
     int galois(int v, int times) {
         bool h = v >> 7; // Highest bit
         switch (times) {
+            case 1:
+                break;
             case 2:
                 v = v << 1; // Shift to the left == * 2
 
@@ -141,19 +144,20 @@ namespace aes {
             case 3:
                 v ^= galois(v, 2);
                 break;
-            case 9:
-                v ^= galois(galois(galois(v, 2), 2), 2);
-                break;
-            case 11:
-                v ^= galois(galois(galois(v, 2), 2)^v, 2);
-                break;
-            case 13:
-                v ^= galois(galois(galois(v, 2)^v, 2), 2);
-                break;
-            case 14:
-                v = galois(galois(galois(v, 2)^v, 2)^v, 2);
-                break;
+//            case 9:
+//                v ^= galois(galois(galois(v, 2), 2), 2);
+//                break;
+//            case 11:
+//                v ^= galois(galois(galois(v, 2), 2)^v, 2);
+//                break;
+//            case 13:
+//                v ^= galois(galois(galois(v, 2)^v, 2), 2);
+//                break;
+//            case 14:
+//                v = galois(galois(galois(v, 2)^v, 2)^v, 2);
+//                break;
             default:
+                cout << "Das sollte nicht passieren :-(" << endl;
                 break;
         }
 
@@ -165,13 +169,13 @@ namespace aes {
 
         int v;
         column c;
-        for (int i = 0; i < columns.size(); ++i) { // For each column
+        for (size_t i = 0; i < columns.size(); ++i) { // For each column
             c = columns.at(i);
-            for (int j = 0; j < c.size(); ++j) { // For each value
+            for (size_t j = 0; j < c.size(); ++j) { // For each value
                 v = 0;
 
                 // Loop through each value, xor with galois product with matrix[]
-                for (int k = 0; k < columns.at(i).size(); ++k) {
+                for (size_t k = 0; k < columns.at(i).size(); ++k) {
                     v ^= galois(c.at(k), matrix[j * 4 + k]);
                 }
 
@@ -185,19 +189,55 @@ namespace aes {
     void inverseMixColumns(block &b) {
         block columns = transformate(b);
 
-        int v;
+        int newContentTmp;
+        int newContent;
         column c;
-        for (int i = 0; i < columns.size(); ++i) { // For each column
+        for (size_t i = 0; i < columns.size(); ++i) { // For each column
             c = columns.at(i);
-            for (int j = 0; j < c.size(); ++j) { // For each value
-                v = 0;
-
+            for (size_t j = 0; j < c.size(); ++j) { // For each value
+                newContentTmp = 0;
+                newContent = 0;
                 // Loop through each value, xor with galois product with matrix[]
-                for (int k = 0; k < c.size(); ++k) {
-                    v ^= galois(c.at(k), inverseMatrix[j * 4 + k]);
+                for (size_t k = 0; k < c.size(); ++k) {
+                    int oldContent = c.at(k);
+                    int multiplikator = inverseMatrix[j * 4 + k];
+                    if (multiplikator == 9) {
+//                        cout << "Multiplikation mit 9" << endl;
+                        newContentTmp = galois(oldContent, 2);
+                        newContentTmp = galois(newContentTmp, 2);
+                        newContentTmp = galois(newContentTmp, 2);
+                        newContentTmp ^= oldContent;
+                    }
+                    if (multiplikator == 11) {
+//                        cout << "Multiplikation mit 11" << endl;
+                        newContentTmp = galois(oldContent, 2);
+                        newContentTmp = galois(newContentTmp, 2);
+                        newContentTmp ^= oldContent;
+                        newContentTmp = galois(newContentTmp, 2);
+                        newContentTmp ^= oldContent;
+                    }
+                    if (multiplikator == 13) {
+//                        cout << "Multiplikation mit 13" << endl;
+                        newContentTmp = galois(oldContent, 2);
+                        newContentTmp ^= oldContent;
+                        newContentTmp = galois(newContentTmp, 2);
+                        newContentTmp = galois(newContentTmp, 2);
+                        newContentTmp ^= oldContent;
+                    }
+                    if (multiplikator == 14) {
+//                        cout << "Multiplikation mit 14" << endl;
+                        newContentTmp = galois(oldContent, 2);
+                        newContentTmp ^= oldContent;
+                        newContentTmp = galois(newContentTmp, 2);
+                        newContentTmp ^= oldContent;
+                        newContentTmp = galois(newContentTmp, 2);
+                    }
+                    newContent ^= newContentTmp;
+                    newContentTmp = 0;
+//                                        newContent ^= galois(c.at(k), inverseMatrix[j * 4 + k]);
                 }
-
-                columns.at(i).at(j) = v % 256;
+                columns.at(i).at(j) = newContent % 256;
+                newContent = 0;
             }
         }
 
