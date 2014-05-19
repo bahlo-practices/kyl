@@ -112,7 +112,7 @@ int main() {
 
 //  cout << endl << "getKey.."  << endl << endl;
   // aes::block key = getKey(keyString);
-  
+
   // Mock key
   aes::block key;
   aes::column c;
@@ -185,7 +185,7 @@ int main() {
 //    aes::inverseSubBytes(mockInput.at(i));
 //  }
 //  printBlocks(mockInput);
-  
+
 //  cout << endl << "shiftRows.." << endl << endl;
 //  for (size_t i = 0; i < mockInput.size(); ++i) {
 //    aes::shiftRows(mockInput.at(i));
@@ -224,20 +224,17 @@ int main() {
   }
   printBlocks(mockInput);
 
-  
-/*
+//  cout << endl << "getRoundKeys.." << endl << endl;
+//  vector<aes::block> keys = aes::getRoundKeys(key);
+//  printBlocks(keys);
 
-  cout << endl << "getRoundKeys.." << endl << endl;
-  vector<aes::block> keys = aes::getRoundKeys(key);
-  printBlocks(keys);
-
-
-  cout << endl << "hash.." << endl << endl;
-  
-  cout << "Cipher:" << endl;
+  cout << "encrypt.." << endl;
   vector<aes::block> cipher = aes::encrypt(mockInput, key);
   printBlocks(cipher);
- */
+
+  cout << "decrypt.." << endl;
+  vector<aes::block> clearText = aes::decrypt(cipher, key);
+  printBlocks(clearText);
 
   return 0;
 }

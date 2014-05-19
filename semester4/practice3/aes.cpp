@@ -340,13 +340,17 @@ namespace aes {
             inverseShiftRows(clearText.at(i));
             inverseSubBytes(clearText.at(i));
         }
-        //all Rounds
+
+        // All Rounds
         for (size_t i = 9; i > 0; --i) {
+            // Key loop
             for (size_t j = 0; j < clearText.size(); ++j) {
-                inverseRoundIt(clearText.at(i), roundKeys.at(j + 1));
+                // Block loop
+                inverseRoundIt(clearText.at(j), roundKeys.at(i));
             }
         }
-        //Initial Round
+
+        // Initial Round
         for (size_t i = 0; i < clearText.size(); ++i) {
             addRoundKey(clearText.at(i), roundKeys.at(0));
         }
