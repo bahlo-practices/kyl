@@ -121,77 +121,132 @@ string toString(const vector<aes::block> blocks) {
 }
 
 int main() {
-  string message = "";
-  string keyString = "";
+  string selectionStr = "";
+  int selection = 0;
 
-  cout << "Nachricht: ";
-  getline(cin, message);
+  cout << "Please select:" << endl;
+  cout << "  1) Encrypt" << endl;
+  cout << "  2) Decrypt" << endl;
+  cout << "  3) Mock and debug" << endl;
 
-  cout << "Key: ";
-  getline(cin, keyString);
+  getline(cin, selectionStr);
+  selection = atoi(selectionStr.c_str());
 
-  aes::block key = getKey(keyString);
-  fillBlock(key);
-  cout << "Key" << endl;
-  printBlock(key);
-  cout << "Clear" << endl;
-  vector<aes::block> clearText = getBlocks(message);
-  printBlocks(clearText);
+  switch (selection) {
+    case 1:
+    case 2: {
+      string message = "";
+      string keyString = "";
+
+      // Prompt
+      cout << "Message: ";
+      getline(cin, message);
+
+      cout << "Key: ";
+      getline(cin, keyString);
+
+      // Convert to blocks
+      aes::block key = getKey(keyString);
+      fillBlock(key); // Fill with zeros
+
+      vector<aes::block> clearText = getBlocks(message);
+
+      // cout << "Key" << endl;
+      // printBlock(key);
+      // cout << "Message" << endl;
+      // printBlocks(clearText);
+
+      if (selection == 1) {
+        // Encrypt
+        cout << "encrypting.." << endl;
+        vector<aes::block> cipher = aes::encrypt(clearText, key);
+        // printBlocks(cipher);
+        cout << "'" << toString(cipher) << "'" << endl;
+      } else {
+        // Decrypt
+        cout << "decrypting.." << endl;
+        vector<aes::block> decrypted = aes::decrypt(clearText, key);
+        // printBlocks(decrypted);
+        cout << "'" << toString(decrypted) << "'" << endl;
+      }
+
+      break;
+    }
+    case 3: {
+      // Mock key
+      aes::block mockKey;
+      aes::column c;
+      c.push_back(0x2b);
+      c.push_back(0x28);
+      c.push_back(0xab);
+      c.push_back(0x09);
+      mockKey.push_back(c);
+      c.at(0) = 0x7e;
+      c.at(1) = 0xae;
+      c.at(2) = 0xf7;
+      c.at(3) = 0xcf;
+      mockKey.push_back(c);
+      c.at(0) = 0x15;
+      c.at(1) = 0xd2;
+      c.at(2) = 0x15;
+      c.at(3) = 0x4f;
+      mockKey.push_back(c);
+      c.at(0) = 0x16;
+      c.at(1) = 0xa6;
+      c.at(2) = 0x88;
+      c.at(3) = 0x3c;
+      mockKey.push_back(c);
+      fillBlock(mockKey); // Fill with zeros
+
+      // Mock input
+      vector<aes::block> mockInput;
+      aes::block mockBlock;
+      aes::row r;
+      r.push_back(0x32);
+      r.push_back(0x88);
+      r.push_back(0x31);
+      r.push_back(0xe0);
+      mockBlock.push_back(r);
+      r.at(0) = 0x43;
+      r.at(1) = 0x5a;
+      r.at(2) = 0x31;
+      r.at(3) = 0x37;
+      mockBlock.push_back(r);
+      r.at(0) = 0xf6;
+      r.at(1) = 0x30;
+      r.at(2) = 0x98;
+      r.at(3) = 0x07;
+      mockBlock.push_back(r);
+      r.at(0) = 0xa8;
+      r.at(1) = 0x8d;
+      r.at(2) = 0xa2;
+      r.at(3) = 0x34;
+      mockBlock.push_back(r);
+      mockInput.push_back(mockBlock);
+
+      cout << "Mock key:" << endl;
+      printBlock(mockKey);
+      cout << endl;
+
+      cout << "Mock input:" << endl;
+      printBlocks(mockInput);
+
+      cout << "Cipher:" << endl;
+      vector<aes::block> cipher = aes::encrypt(mockInput, mockKey);
+      printBlocks(cipher);
+
+      cout << "Message:" << endl;
+      vector<aes::block> message = aes::decrypt(cipher, mockKey);
+      printBlocks(message);
+
+      break;
+    }
+    default:
+      cout << "This option is not available, sorry";
+      break;
+  }
 
   /*
-  // Mock key
-  aes::block key;
-  aes::column c;
-  c.push_back(0x2b);
-  c.push_back(0x28);
-  c.push_back(0xab);
-  c.push_back(0x09);
-  key.push_back(c);
-  c.at(0) = 0x7e;
-  c.at(1) = 0xae;
-  c.at(2) = 0xf7;
-  c.at(3) = 0xcf;
-  key.push_back(c);
-  c.at(0) = 0x15;
-  c.at(1) = 0xd2;
-  c.at(2) = 0x15;
-  c.at(3) = 0x4f;
-  key.push_back(c);
-  c.at(0) = 0x16;
-  c.at(1) = 0xa6;
-  c.at(2) = 0x88;
-  c.at(3) = 0x3c;
-  key.push_back(c);
-  // End mock key
-
-  fillBlock(key); // Fill with zeros
-  cout << "Key:" << endl;
-  printBlock(key);
-  // Mock it
-  vector<aes::block> mockInput;
-  aes::block mockBlock;
-  aes::row r;
-  r.push_back(0x32);
-  r.push_back(0x88);
-  r.push_back(0x31);
-  r.push_back(0xe0);
-  mockBlock.push_back(r);
-  r.at(0) = 0x43;
-  r.at(1) = 0x5a;
-  r.at(2) = 0x31;
-  r.at(3) = 0x37;
-  mockBlock.push_back(r);
-  r.at(0) = 0xf6;
-  r.at(1) = 0x30;
-  r.at(2) = 0x98;
-  r.at(3) = 0x07;
-  mockBlock.push_back(r);
-  r.at(0) = 0xa8;
-  r.at(1) = 0x8d;
-  r.at(2) = 0xa2;
-  r.at(3) = 0x34;
-  mockBlock.push_back(r);
-  mockInput.push_back(mockBlock);
 
   cout << endl << "Input:" << endl;
   printBlocks(mockInput);
@@ -255,13 +310,6 @@ int main() {
 // vector<aes::block> keys = aes::getRoundKeys(key);
 // printBlocks(keys);
 
-  cout << "encrypt.." << endl;
-  vector<aes::block> cipher = aes::encrypt(clearText, key);
-  printBlocks(cipher);
-
-  cout << "decrypt.." << endl;
-  vector<aes::block> decrypted = aes::decrypt(cipher, key);
-  printBlocks(decrypted);
 
   return 0;
 }
