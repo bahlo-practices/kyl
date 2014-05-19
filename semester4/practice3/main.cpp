@@ -151,23 +151,27 @@ int main() {
 
       vector<aes::block> clearText = getBlocks(message);
 
-      // cout << "Key" << endl;
+      // cout << "Key:" << endl;
       // printBlock(key);
-      // cout << "Message" << endl;
+      // cout << endl;
+      //
+      // cout << "Message:" << endl;
       // printBlocks(clearText);
 
       if (selection == 1) {
         // Encrypt
         cout << "encrypting.." << endl;
         vector<aes::block> cipher = aes::encrypt(clearText, key);
-        // printBlocks(cipher);
-        cout << "'" << toString(cipher) << "'" << endl;
+        printBlocks(cipher);
+
+        cout << "decrypting.." << endl;
+        vector<aes::block> decrypted = aes::decrypt(cipher, key);
+        printBlocks(decrypted);
       } else {
         // Decrypt
         cout << "decrypting.." << endl;
         vector<aes::block> decrypted = aes::decrypt(clearText, key);
-        // printBlocks(decrypted);
-        cout << "'" << toString(decrypted) << "'" << endl;
+        printBlocks(decrypted);
       }
 
       break;
