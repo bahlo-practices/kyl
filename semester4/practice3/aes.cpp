@@ -189,12 +189,9 @@ namespace aes {
      * @return   The result of the calculation
      */
     int galois(int v, int n) {
-        bool h; // Highest bit
-
-        // FIXME: Stupid, stupid method
-        bitset < 8 > bitInhalt = v;
-        string sBitInhalt = bitInhalt.to_string();
-        h = sBitInhalt.at(0) == '1';
+        // Get least significant bit
+        // ffs() returns the index, starting at 1
+        bool h = ffs(v) == 1;
 
         switch (n) {
             case 2: {
