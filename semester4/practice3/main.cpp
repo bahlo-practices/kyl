@@ -104,15 +104,21 @@ int main() {
   string message = "";
   string keyString = "";
 
-//  cout << "Nachricht: ";
-//  getline(cin, message);
-//
-//  cout << "Key: ";
-//  getline(cin, keyString);
+  cout << "Nachricht: ";
+  getline(cin, message);
 
-//  cout << endl << "getKey.."  << endl << endl;
-  // aes::block key = getKey(keyString);
+  cout << "Key: ";
+  getline(cin, keyString);
 
+  aes::block key = getKey(keyString);
+  fillBlock(key);
+  cout << "Key" << endl;
+  printBlock(key);
+  cout << "Clear" << endl;
+  vector<aes::block> clearText = getBlocks(message);
+  printBlocks(clearText);
+
+  /*
   // Mock key
   aes::block key;
   aes::column c;
@@ -169,6 +175,7 @@ int main() {
 
   cout << endl << "Input:" << endl;
   printBlocks(mockInput);
+  */
 
 //  cout << endl << "getBlocks.." << endl << endl;
 //  vector<aes::block> blocks = getBlocks(message);
@@ -212,28 +219,28 @@ int main() {
 //  }
 //  printBlocks(rowed);
 
-  cout << endl << "mixColumns.." << endl << endl;
-  for (size_t i = 0; i < mockInput.size(); ++i) {
-    aes::mixColumns(mockInput.at(i));
-  }
-  printBlocks(mockInput);
+//  cout << endl << "mixColumns.." << endl << endl;
+//  for (size_t i = 0; i < mockInput.size(); ++i) {
+//    aes::mixColumns(mockInput.at(i));
+//  }
+//  printBlocks(mockInput);
 
-  cout << endl << "inverseMixColumns.." << endl << endl;
-  for (size_t i = 0; i < mockInput.size(); ++i) {
-    aes::inverseMixColumns(mockInput.at(i));
-  }
-  printBlocks(mockInput);
+//  cout << endl << "inverseMixColumns.." << endl << endl;
+//  for (size_t i = 0; i < mockInput.size(); ++i) {
+//    aes::inverseMixColumns(mockInput.at(i));
+//  }
+//  printBlocks(mockInput);
 
-//  cout << endl << "getRoundKeys.." << endl << endl;
-//  vector<aes::block> keys = aes::getRoundKeys(key);
-//  printBlocks(keys);
+// cout << endl << "getRoundKeys.." << endl << endl;
+// vector<aes::block> keys = aes::getRoundKeys(key);
+// printBlocks(keys);
 
   cout << "encrypt.." << endl;
-  vector<aes::block> cipher = aes::encrypt(mockInput, key);
+  vector<aes::block> cipher = aes::encrypt(clearText, key);
   printBlocks(cipher);
 
   cout << "decrypt.." << endl;
-  vector<aes::block> clearText = aes::decrypt(cipher, key);
+  clearText = aes::decrypt(cipher, key);
   printBlocks(clearText);
 
   return 0;

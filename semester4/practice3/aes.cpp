@@ -131,6 +131,7 @@ namespace aes {
     int galois(int v, int times) {
         bool h; // Highest bit
 
+        // FIXME: Stupid, stupid method
         bitset < 8 > bitInhalt = v;
         string sBitInhalt = bitInhalt.to_string();
         h = sBitInhalt.at(0) == '1';
