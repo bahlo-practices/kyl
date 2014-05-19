@@ -240,8 +240,8 @@ int main() {
   printBlocks(cipher);
 
   cout << "decrypt.." << endl;
-  clearText = aes::decrypt(cipher, key);
-  printBlocks(clearText);
+  vector<aes::block> decrypted = aes::decrypt(cipher, key);
+  printBlocks(decrypted);
 
   return 0;
 }

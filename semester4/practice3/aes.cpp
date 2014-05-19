@@ -46,6 +46,11 @@ namespace aes {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     };
 
+    /**
+     * Returns the given column in the rconMatrix[]
+     * @param  col The index of the column to return
+     * @return     The column
+     */
     column rcon(int col) {
         column result;
 
@@ -56,36 +61,72 @@ namespace aes {
         return result;
     }
 
+    /**
+     * Replaces the given value with the one at the index of the int value in
+     * sbox[]
+     * @param v A reference to the char to replace
+     */
+    void subBytes(int &v) {
+        v = sbox[(int) v];
+    }
+
+    /**
+     * Calls subBytes() for every value in a column
+     * @param c The column to substitute
+     */
     void subBytes(column &c) {
-        for (size_t j = 0; j < c.size(); ++j) {
-            c.at(j) = sbox[(int) c.at(j)];
+        for (size_t i = 0; i < c.size(); ++i) {
+            subBytes(c.at(i));
         }
     }
 
+    /**
+     * Calls subBytes() for every row in the given block
+     * @param b The block to substitute
+     */
     void subBytes(block &b) {
         for (size_t i = 0; i < b.size(); ++i) {
             subBytes(b.at(i));
         }
     }
 
-    void inverseSubBytes(column &c) {
-        for (size_t i = 0; i < c.size(); ++i) {
-            // For each element
-            for (size_t j = 0; j < sizeof (sbox); ++j) {
-                if (sbox[j] == c.at(i)) {
-                    c.at(i) = j;
-                    break;
-                }
+    /**
+     * Searches for the value in sbox[] and returns it's index
+     * @param v The value to search for
+     */
+    void inverseSubBytes(int &v) {
+        for (size_t i = 0; i < sizeof(sbox); ++i) {
+            if (sbox[i] == v) {
+                v = i;
+                break;
             }
         }
     }
 
+    /**
+     * Calls inverseSubBytes() for each row in the given row
+     * @param c The row to inverse substitute
+     */
+    void inverseSubBytes(column &c) {
+        for (size_t i = 0; i < c.size(); ++i) {
+            inverseSubBytes(c.at(i));
+        }
+    }
+
+    /**
+     * Calls inverseSubBytes() for every row in the given block
+     * @param b The block to inverse substitute
+     */
     void inverseSubBytes(block &b) {
         for (size_t i = 0; i < b.size(); ++i) {
             inverseSubBytes(b.at(i));
         }
     }
 
+    /**
+     * Applies shift-rows-step to the given row
+     * @param b The row to rowtate (hah)
+     */
     void shiftRows(block &b) {
         for (size_t i = 0; i < b.size(); ++i) {
             switch (i) {
@@ -106,6 +147,19 @@ namespace aes {
         }
     }
 
+    /**
+     * Transformates the block. Basically just returns the columns
+     * @param  b The block to transformate
+     * @return   The transformated block
+     *
+     * Example:
+     *
+     *   0  1  2  3           0  4  8  c
+     *   4  5  6  7  becomes  1  5  9  d
+     *   8  9  a  b           2  6  a  e
+     *   c  d  e  f           3  7  b  f
+     *
+     */
     block transformate(const block b) {
         block transformated;
 
@@ -128,7 +182,13 @@ namespace aes {
         return transformated;
     }
 
-    int galois(int v, int times) {
+    /**
+     * Performs a galois calculation
+     * @param  v The value
+     * @param  n The factor
+     * @return   The result of the calculation
+     */
+    int galois(int v, int n) {
         bool h; // Highest bit
 
         // FIXME: Stupid, stupid method
@@ -136,9 +196,7 @@ namespace aes {
         string sBitInhalt = bitInhalt.to_string();
         h = sBitInhalt.at(0) == '1';
 
-        switch (times) {
-            case 1:
-                break;
+        switch (n) {
             case 2: {
                 v <<= 1; // Shift to the left == * 2
 
@@ -163,13 +221,16 @@ namespace aes {
                 v = galois(galois(galois(v, 2) ^ v, 2) ^ v, 2);
                 break;
             default:
-                cout << "Das sollte nicht passieren :-(" << endl;
                 break;
         }
 
         return v;
     }
 
+    /**
+     * Performs the mix columns step on the given block
+     * @param b A reference to the block
+     */
     void mixColumns(block &b) {
         block columns = transformate(b);
 
@@ -192,6 +253,10 @@ namespace aes {
         b = transformate(columns);
     }
 
+    /**
+     * Like mixColumns() but the other way
+     * @param b The block to invert mix-columns
+     */
     void inverseMixColumns(block &b) {
         block columns = transformate(b);
 
@@ -215,6 +280,11 @@ namespace aes {
         b = transformate(columns);
     }
 
+    /**
+     * Returns a vector with the ten (10) round keys
+     * @param  key The key to expand
+     * @return     The round keys
+     */
     vector<block> getRoundKeys(const block key) {
         vector<block> roundKeys;
         roundKeys.push_back(key);
@@ -264,21 +334,37 @@ namespace aes {
         return roundKeys;
     }
 
-    void addRoundKey(block &input, block key) {
-        for (size_t i = 0; i < input.size(); ++i) {
-            for (size_t j = 0; j < input.at(i).size(); ++j) {
-                input.at(i).at(j) ^= key.at(i).at(j);
+    /**
+     * XOR a block with a key
+     * @param b A reference to a block
+     * @param k The key
+     */
+    void addRoundKey(block &b, block k) {
+        for (size_t i = 0; i < b.size(); ++i) {
+            for (size_t j = 0; j < b.at(i).size(); ++j) {
+                b.at(i).at(j) ^= k.at(i).at(j);
             }
         }
     }
 
-    void roundIt(block &input, const block roundKey) {
-        subBytes(input);
-        shiftRows(input);
-        mixColumns(input);
-        addRoundKey(input, roundKey);
+    /**
+     * Performs a round
+     * @param b A reference to a block
+     * @param k The key
+     */
+    void roundIt(block &b, const block k) {
+        subBytes(b);
+        shiftRows(b);
+        mixColumns(b);
+        addRoundKey(b, k);
     }
 
+    /**
+     *  Encrypt function
+     *  @param  input A vector with 128-bit blocks containing the message
+     *  @param  key   The key
+     *  @return       The cipher
+     */
     vector<block> encrypt(const vector<block> input, const block key) {
         vector<block> roundKeys = getRoundKeys(key);
         vector<block> cipher = input;
@@ -304,6 +390,11 @@ namespace aes {
         return cipher;
     }
 
+    /**
+     * Like roundIt(), but reverse (you don't say)
+     * @param input    The block to apply the round on
+     * @param roundKey The roundKey
+     */
     void inverseRoundIt(block &input, const block roundKey) {
         addRoundKey(input, roundKey);
         inverseMixColumns(input);
@@ -311,6 +402,10 @@ namespace aes {
         inverseSubBytes(input);
     }
 
+    /**
+     * Like shiftRows(), but reverse
+     * @param b A reference to the block to apply the shift-rows step on
+     */
     void inverseShiftRows(block &b) {
         for (size_t i = 0; i < b.size(); ++i) {
             switch (i) {
@@ -331,6 +426,12 @@ namespace aes {
         }
     }
 
+    /**
+     * Decrypt function
+     * @param  cipher A vector with blocks containing the cipher
+     * @param  key    The key
+     * @return        A vector with blocks containing the message
+     */
     vector<block> decrypt(const vector<block> cipher, const block key) {
         vector<block> roundKeys = getRoundKeys(key);
         vector<block> clearText = cipher;
