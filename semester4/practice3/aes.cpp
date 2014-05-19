@@ -129,18 +129,23 @@ namespace aes {
     }
 
     int galois(int v, int times) {
-        bool h = v >> 7; // Highest bit
+        bool h; // Highest bit
+
+        bitset < 8 > bitInhalt = v;
+        string sBitInhalt = bitInhalt.to_string();
+        h = sBitInhalt.at(0) == '1';
+
         switch (times) {
             case 1:
                 break;
-            case 2:
-                v = v << 1; // Shift to the left == * 2
+            case 2: {
+                v <<= 1; // Shift to the left == * 2
 
                 if (h) {
                     v ^= 0x1B;
                 }
-
                 break;
+            }
             case 3:
                 v ^= galois(v, 2);
                 break;
@@ -154,7 +159,7 @@ namespace aes {
                 v ^= galois(galois(galois(v, 2)^v, 2), 2);
                 break;
             case 14:
-                v = galois(galois(galois(v, 2)^v, 2) ^ v, 2);
+                v = galois(galois(galois(v, 2) ^ v, 2) ^ v, 2);
                 break;
             default:
                 cout << "Das sollte nicht passieren :-(" << endl;
