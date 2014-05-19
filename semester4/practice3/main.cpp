@@ -100,6 +100,26 @@ aes::block getKey(string k) {
   return b;
 }
 
+string toString(const vector<aes::block> blocks) {
+  std::stringstream ss;
+
+  for (size_t i = 0; i < blocks.size(); ++i) {
+    // For each block
+    for (size_t j = 0; j < blocks.at(i).size(); ++j) {
+      // For each row
+      for (size_t k = 0; k < blocks.at(i).at(j).size(); ++k) {
+        // For each value
+        int value = blocks.at(i).at(j).at(k);
+        if (value > 0) {
+          ss << (char) value;
+        }
+      }
+    }
+  }
+
+  return ss.str();
+}
+
 int main() {
   string message = "";
   string keyString = "";
