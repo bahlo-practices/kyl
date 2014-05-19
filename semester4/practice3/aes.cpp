@@ -144,18 +144,18 @@ namespace aes {
             case 3:
                 v ^= galois(v, 2);
                 break;
-//            case 9:
-//                v ^= galois(galois(galois(v, 2), 2), 2);
-//                break;
-//            case 11:
-//                v ^= galois(galois(galois(v, 2), 2)^v, 2);
-//                break;
-//            case 13:
-//                v ^= galois(galois(galois(v, 2)^v, 2), 2);
-//                break;
-//            case 14:
-//                v = galois(galois(galois(v, 2)^v, 2)^v, 2);
-//                break;
+            case 9:
+                v ^= galois(galois(galois(v, 2), 2), 2);
+                break;
+            case 11:
+                v ^= galois(galois(galois(v, 2), 2) ^ v, 2);
+                break;
+            case 13:
+                v ^= galois(galois(galois(v, 2)^v, 2), 2);
+                break;
+            case 14:
+                v = galois(galois(galois(v, 2)^v, 2) ^ v, 2);
+                break;
             default:
                 cout << "Das sollte nicht passieren :-(" << endl;
                 break;
@@ -199,42 +199,7 @@ namespace aes {
                 newContent = 0;
                 // Loop through each value, xor with galois product with matrix[]
                 for (size_t k = 0; k < c.size(); ++k) {
-                    int oldContent = c.at(k);
-                    int multiplikator = inverseMatrix[j * 4 + k];
-                    if (multiplikator == 9) {
-//                        cout << "Multiplikation mit 9" << endl;
-                        newContentTmp = galois(oldContent, 2);
-                        newContentTmp = galois(newContentTmp, 2);
-                        newContentTmp = galois(newContentTmp, 2);
-                        newContentTmp ^= oldContent;
-                    }
-                    if (multiplikator == 11) {
-//                        cout << "Multiplikation mit 11" << endl;
-                        newContentTmp = galois(oldContent, 2);
-                        newContentTmp = galois(newContentTmp, 2);
-                        newContentTmp ^= oldContent;
-                        newContentTmp = galois(newContentTmp, 2);
-                        newContentTmp ^= oldContent;
-                    }
-                    if (multiplikator == 13) {
-//                        cout << "Multiplikation mit 13" << endl;
-                        newContentTmp = galois(oldContent, 2);
-                        newContentTmp ^= oldContent;
-                        newContentTmp = galois(newContentTmp, 2);
-                        newContentTmp = galois(newContentTmp, 2);
-                        newContentTmp ^= oldContent;
-                    }
-                    if (multiplikator == 14) {
-//                        cout << "Multiplikation mit 14" << endl;
-                        newContentTmp = galois(oldContent, 2);
-                        newContentTmp ^= oldContent;
-                        newContentTmp = galois(newContentTmp, 2);
-                        newContentTmp ^= oldContent;
-                        newContentTmp = galois(newContentTmp, 2);
-                    }
-                    newContent ^= newContentTmp;
-                    newContentTmp = 0;
-//                                        newContent ^= galois(c.at(k), inverseMatrix[j * 4 + k]);
+                    newContent ^= galois(c.at(k), inverseMatrix[j * 4 + k]);
                 }
                 columns.at(i).at(j) = newContent % 256;
                 newContent = 0;
