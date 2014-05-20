@@ -200,6 +200,7 @@ namespace aes {
                 if (h) {
                     v ^= 0x1B;
                 }
+
                 break;
             }
             case 3:
@@ -212,7 +213,7 @@ namespace aes {
                 v ^= galois(galois(galois(v, 2), 2) ^ v, 2);
                 break;
             case 13:
-                v ^= galois(galois(galois(v, 2)^v, 2), 2);
+                v ^= galois(galois(galois(v, 2) ^ v, 2), 2);
                 break;
             case 14:
                 v = galois(galois(galois(v, 2) ^ v, 2) ^ v, 2);

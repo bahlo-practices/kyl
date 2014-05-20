@@ -126,7 +126,7 @@ int main() {
 
   cout << "Please select:" << endl;
   cout << "  1) Encrypt" << endl;
-  cout << "  2) Decrypt" << endl;
+  // cout << "  2) Decrypt" << endl;
   cout << "  3) Mock and debug" << endl;
 
   getline(cin, selectionStr);
@@ -167,6 +167,9 @@ int main() {
         cout << "decrypting.." << endl;
         vector<aes::block> decrypted = aes::decrypt(cipher, key);
         printBlocks(decrypted);
+
+
+        cout << "Message (cleartext): " << toString(decrypted) << endl;
       } else {
         // Decrypt
         cout << "decrypting.." << endl;
